@@ -192,14 +192,18 @@ $inicial = strtoupper(substr($usuario, 0, 1));
   <!-- Header con usuario -->
   <header>
     <div class="user-menu" onclick="toggleMenu()">
-      <div class="user-icon"><?= $inicial ?></div>
+      <div class="user-icon">{{ $inicial }}</div>
       <div class="dropdown">
-        <a href="#">Mi Perfil</a>
-        <a href="#">Configuración</a>
-        <a href="{{ route('rol') }}">Cerrar Sesión</a>
+        #Mi Perfil</a>
+        #Configuración</a>
+
+        {{ route(
+          @csrf
+          <button type="submit" class="text-left w-full">Cerrar sesión</button>
+        </form>
       </div>
     </div>
-  </header>
+</header>
 
   <!-- Contenido -->
   <main>

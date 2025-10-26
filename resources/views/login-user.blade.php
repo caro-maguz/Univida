@@ -147,7 +147,7 @@
     <h2>Iniciar Sesión</h2>
 
     <!-- Formulario funcional -->
-    <form action="{{ route('login.process') }}" method="POST">
+    <form action="{{ route('login.user.process') }}" method="POST">
       @csrf
       <div class="form-group">
         <label for="email">Correo institucional</label>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,25 @@ class LoginController extends Controller
         return view('login-user'); // tu vista de inicio de sesión
     }
 
+    // Cerrar sesión
+     public function logoutPsicologo()
+    {
+        Session::forget(['rol', 'id', 'nombre']);
+        return redirect()->route('login.user');
+    }
+
+    public function logoutAdmin()
+    {
+    Session::forget(['rol', 'id', 'nombre']);
+    return redirect()->route('login.user');
+    }
+    public function logoutUsuario()
+    {
+    Session::forget(['rol', 'id', 'nombre']);
+    return redirect()->route('login.user');
+    }
+    
+    
     public function login(Request $request)
     {
         // Validar datos
@@ -36,7 +56,7 @@ class LoginController extends Controller
 
         if ($psicologo && Hash::check($contrasena, $psicologo->contrasena)) {
             session(['rol' => 'psicologo', 'id' => $psicologo->id_psicologo, 'nombre' => $psicologo->nombre]);
-            return redirect()->route('inicio.psicologo');
+            return redirect()->route('dashboard.psychologist');
         }
 
         if ($admin && Hash::check($contrasena, $admin->contrasena)) {

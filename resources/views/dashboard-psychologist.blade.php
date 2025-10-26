@@ -196,27 +196,31 @@
   <header>
     <div class="user-info">
       <div class="welcome-text">
-        <h2>Bienvenido, Dr. Alejandro</h2>
+        <h2>Bienvenido, Dr. {{ session('nombre') }}</h2>
       </div>
     </div>
 
-    <!-- Avatar circular con letra "U" -->
-    <div class="avatar-circle" id="userMenuBtn">U</div>
-
-    <!-- Menú desplegable -->
-    <div class="dropdown-menu" id="dropdownMenu">
-      <a href="#">Mi Perfil</a>
-      <a href="#">Configuración</a>
-      <a href="{{ route('logout') }}" 
-         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-         Cerrar Sesión
-      </a>
+    <!-- Avatar circular con letra inicial -->
+    <div class="avatar-circle" id="userMenuBtn">
+      {{ strtoupper(substr(session('nombre'), 0, 1)) }}
     </div>
 
-    <!-- Formulario oculto para cerrar sesión -->
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
+    <!-- Menú desplegable -->
+     <div class="dropdown-menu" id="dropdownMenu">
+      <a href="#">Mi Perfil</a>
+      <a href="#">Configuración</a>
+
+  <!-- Botón de cerrar sesión -->
+      <form action="{{ route('logout.psicologo') }}" method="POST">
+    @csrf
+    <button type="submit" class="text-left w-full border-none bg-white p-2 cursor-pointer hover:bg-red-50 hover:text-red-700">
+        Cerrar sesión
+    </button>
+</form>
+
+</div>
+
+
   </header>
 
   <main class="main">

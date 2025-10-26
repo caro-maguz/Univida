@@ -7,8 +7,26 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Psicologo;
 
+
+// DROP en la tabla psicologo 
+
 class PsicologoController extends Controller
 {
+    
+    public function dashboard()
+         {
+        // Verifica si el psicólogo ha iniciado sesión
+        if (!session('rol') || session('rol') !== 'psicologo') {
+            return redirect()->route('login.user');
+        }
+
+        return view('dashboard-psychologist'); 
+        }
+
+
+
+
+
     // Mostrar lista de psicólogos (CONSULTAR)
     public function index()
     {
@@ -108,4 +126,7 @@ class PsicologoController extends Controller
 
         return redirect()->route('psicologos.index')->with('success', 'Psicólogo eliminado exitosamente.');
     }
+
+
+
 }
