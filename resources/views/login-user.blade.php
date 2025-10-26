@@ -131,28 +131,40 @@
       text-decoration: none;
       font-weight: 500;
     }
+
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div class="login-container">
     <!-- Logo -->
     <img src="{{ asset('img/Logo.png') }}" alt="Logo Univida" class="logo">
-    <h2>Iniciar Sesión - Usuario</h2>
+    <h2>Iniciar Sesión</h2>
 
-    <!-- Formulario -->
-    <form onsubmit="event.preventDefault(); window.location.href='{{ route('dashboard.user') }}';">
+    <!-- Formulario funcional -->
+    <form action="{{ route('login.process') }}" method="POST">
+      @csrf
       <div class="form-group">
         <label for="email">Correo institucional</label>
-        <input type="email" id="email" name="email" placeholder="usuario@uniautonoma.edu.co">
+        <input type="email" id="email" name="correo" placeholder="---@uniautonoma.edu.co" required>
       </div>
 
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input type="password" id="password" name="password" placeholder="••••••••">
+        <input type="password" id="password" name="contrasena" placeholder="••••••••" required>
         <button type="button" class="toggle-password" onclick="togglePassword()">👁</button>
       </div>
 
       <button type="submit" class="login-button">Ingresar</button>
+
+      @error('login_error')
+        <p class="error-message">{{ $message }}</p>
+      @enderror
     </form>
 
     <!-- Enlace para recuperar contraseña -->
@@ -161,18 +173,14 @@
     <!-- Enlaces extra -->
     <div class="extra-links">
       <p><a href="{{ route('register.user') }}">Crear cuenta nueva</a></p>
-      <p><a href="{{ route('rol') }}">← Regresar</a></p>
+      <p><a href="{{ route('home') }}">← Regresar</a></p>
     </div>
   </div>
 
   <script>
     function togglePassword() {
       const passwordInput = document.getElementById("password");
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-      } else {
-        passwordInput.type = "password";
-      }
+      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
     }
   </script>
 </body>

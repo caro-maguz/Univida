@@ -7,6 +7,8 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RecursoController;
 use App\Http\Controllers\EstadisticaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LoginController;
+
 
 // ===============================
 // PÁGINA PRINCIPAL Y BÁSICAS
@@ -86,3 +88,13 @@ Route::prefix('administrador')->group(function () {
 });
 
 
+// procesar formulario de login 
+
+Route::get('/login-user', [LoginController::class, 'showLoginForm'])->name('login.form');
+Route::post('/login-user', [LoginController::class, 'login'])->name('login.process');
+
+// cerrar sesion 
+Route::get('/logout', function () {
+    session()->flush();
+    return redirect('/');
+})->name('logout');

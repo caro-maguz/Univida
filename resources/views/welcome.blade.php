@@ -255,7 +255,7 @@
       </a>
     </div>
     <div class="nav-links">
-      <a href="{{ route('rol') }}"><button class="login-button">Iniciar Sesión</button></a>
+      <a href="{{ route('login.user') }}"><button class="login-button">Iniciar Sesión</button></a>
     </div>
   </header>
 
