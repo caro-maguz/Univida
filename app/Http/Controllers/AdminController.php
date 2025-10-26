@@ -10,9 +10,9 @@ use App\Models\Psicologo;
 
 class AdminController extends Controller
 {
-    // =====================
+
     // LOGIN Y SESIÓN
-    // =====================
+
 
     public function showLoginForm()
     {
@@ -41,7 +41,7 @@ class AdminController extends Controller
     public function logout()
     {
         Session::forget(['admin_id', 'admin_nombre']);
-        return redirect()->route('login.admin');
+        return redirect()->route('login.user');
     }
 
     public function dashboard()
@@ -54,9 +54,8 @@ class AdminController extends Controller
         return view('administrador.dashboard', compact('psicologos'));
     }
 
-    // =====================
     // CRUD DE PSICÓLOGOS
-    // =====================
+
 
     // Mostrar lista
     public function index()

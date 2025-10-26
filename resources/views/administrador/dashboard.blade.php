@@ -44,10 +44,10 @@
       </button>
     </nav>
     <div class="absolute bottom-0 w-full p-4 border-t border-blue-400">
-      <form action="{{ route('administrador.logout') }}" method="POST">
+      <form>
         @csrf
         <button type="submit" class="flex items-center text-red-200 hover:text-white">
-          <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+          <a href="{{ route('administrador.logout') }}">Cerrar sesión</a>
         </button>
       </form>
     </div>

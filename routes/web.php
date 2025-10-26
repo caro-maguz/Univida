@@ -67,16 +67,17 @@ Route::middleware(['auth.psychologist'])->group(function () {
     Route::delete('/psicologos/{id}', [PsychologistController::class, 'destroy'])->name('psicologos.destroy');
 });
 
-// ===============================
+
 // RUTAS PARA ADMINISTRADOR
-// ===============================
+
 
 Route::prefix('administrador')->group(function () {
     // 🔹 LOGIN Y DASHBOARD
     Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login.admin');
     Route::post('/login', [AdminController::class, 'login'])->name('login.admin.post');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('administrador.dashboard');
-    Route::post('/logout', [AdminController::class, 'logout'])->name('administrador.logout');
+    Route::get('/logout', [AdminController::class, 'logout'])->name('administrador.logout');
+
 
     // 🔹 CRUD DE ADMINISTRADORES
     Route::get('/', [AdminController::class, 'index'])->name('administrador.index');
