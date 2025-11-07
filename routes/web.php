@@ -39,7 +39,7 @@ Route::post('/logout/admin', [LoginController::class, 'logoutAdmin'])->name('log
 // RUTAS PARA USUARIO
 // ===============================
 Route::get('/registro/usuario', fn() => view('register-user'))->name('register.user');
-Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('dashboard.user');
+Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('inicio.usuario');
 
 // ===============================
 // RUTAS PARA HISTORIAS
@@ -82,4 +82,15 @@ Route::prefix('administrador')->group(function () {
     Route::get('/editar/{id}', [AdminController::class, 'edit'])->name('administrador.edit');
     Route::put('/actualizar/{id}', [AdminController::class, 'update'])->name('administrador.update');
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('administrador.destroy');
+});
+
+// ===============================
+// RUTAS PROTEGIDAS PARA USUARIO
+// ===============================
+Route::middleware(['auth.usuario'])->group(function () {
+    Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('inicio.usuario');
+    Route::get('/reporte', fn() => view('reporte'))->name('reporte');
+    Route::get('/chat', fn() => view('chat'))->name('chat');
+    Route::get('/recursos', fn() => view('resources'))->name('resources');
+    Route::get('/historias', fn() => view('historias'))->name('historias');
 });

@@ -190,19 +190,20 @@ $inicial = strtoupper(substr($usuario, 0, 1));
 <body>
 
   <!-- Header con usuario -->
-  <header>
-    <div class="user-menu" onclick="toggleMenu()">
-      <div class="user-icon">{{ $inicial }}</div>
-      <div class="dropdown">
-        #Mi Perfil</a>
-        #Configuración</a>
-
-        {{ route(
-          @csrf
-          <button type="submit" class="text-left w-full">Cerrar sesión</button>
-        </form>
-      </div>
+<header>
+  <div class="user-menu" onclick="toggleMenu()">
+    <div class="user-icon"><?php echo $inicial; ?></div>
+    <div class="dropdown">
+      <a href="#">Mi Perfil</a>
+      <a href="#">Configuración</a>
+      <form action="{{ route('logout.usuario') }}" method="POST" style="margin:0;">
+        @csrf
+        <button type="submit" style="width:100%; text-align:left; padding:12px; background:none; border:none; cursor:pointer; font-family:'Delius', cursive; font-size:0.95rem; color:#333;">
+          Cerrar sesión
+        </button>
+      </form>
     </div>
+  </div>
 </header>
 
   <!-- Contenido -->

@@ -214,7 +214,7 @@
 <body>
   <!-- Header -->
   <header>
-    <a href="{{ route('dashboard.user') }}">Regresar</a>
+    <a href="{{ route('inicio.usuario') }}">Regresar</a>
   </header>
 
   <main>
@@ -243,7 +243,7 @@
         </form>
 
         <div class="chat-actions">
-          <a href="{{ route('dashboard.user') }}" class="danger">Finalizar Chat</a>
+          <a href="{{ route('inicio.usuario') }}" class="danger">Finalizar Chat</a>
         </div>
       </section>
     </article>

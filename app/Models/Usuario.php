@@ -8,5 +8,14 @@ class Usuario extends Model
 {
     protected $table = 'usuario';
     protected $primaryKey = 'id_usuario';
-    protected $fillable = ['nombre', 'correo', 'contrasena', 'telefono', 'tipo_usuario', 'anonimo'];
+    public $timestamps = false; // 🚫 Evita los errores de created_at y updated_at
+
+    protected $fillable = [
+        'nombre',
+        'correo',
+        'contrasena',
+        'telefono',
+        'tipo_usuario',
+        'anonimo'
+    ];
 }
