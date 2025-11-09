@@ -94,3 +94,24 @@ Route::middleware(['auth.usuario'])->group(function () {
     Route::get('/recursos', fn() => view('resources'))->name('resources');
     Route::get('/historias', fn() => view('historias'))->name('historias');
 });
+
+
+// ===============================
+// RUTAS DE CHAT PARA USUARIO
+// ===============================
+Route::middleware(['auth.usuario'])->group(function () {
+    Route::get('/chat', [ChatController::class, 'mostrarChat'])->name('chat');
+    Route::post('/chat/enviar', [ChatController::class, 'enviarMensaje'])->name('chat.enviar');
+    Route::get('/chat/nuevos-mensajes', [ChatController::class, 'obtenerNuevosMensajes'])->name('chat.nuevos');
+    Route::post('/chat/finalizar', [ChatController::class, 'finalizarChat'])->name('chat.finalizar');
+});
+
+// ===============================
+// RUTAS DE CHAT PARA PSICÓLOGO
+// ===============================
+Route::middleware(['auth.psychologist'])->group(function () {
+    Route::get('/psychologist/chat-apoyo', [ChatController::class, 'index'])->name('psychologist.chat');
+    Route::get('/psychologist/chat/{id}', [ChatController::class, 'verChat'])->name('psychologist.chat.ver');
+    Route::post('/psychologist/chat/tomar', [ChatController::class, 'tomarChat'])->name('psychologist.chat.tomar');
+    Route::post('/psychologist/chat/enviar', [ChatController::class, 'psicologoEnviarMensaje'])->name('psychologist.chat.enviar');
+});

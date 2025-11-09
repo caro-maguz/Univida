@@ -24,4 +24,8 @@ class Psicologo extends Model
         'correo',
         'contrasena'
     ];
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'psicologo_id', 'id_psicologo');
+    }
 }

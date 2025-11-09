@@ -18,4 +18,8 @@ class Usuario extends Model
         'tipo_usuario',
         'anonimo'
     ];
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'usuario_id', 'id_usuario');
+    }
 }
