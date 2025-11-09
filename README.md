@@ -1,66 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Univida - Sistema de Apoyo Psicológico
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Requisitos Previos
+- PHP >= 8.1
+- Composer
+- MySQL/MariaDB
+- Node.js y npm (para assets)
+- XAMPP o servidor web similar
 
-## About Laravel
+## Pasos de Instalación
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. **Clonar el Repositorio**
+```bash
+git clone https://github.com/caro-maguz/Univida.git
+cd Univida
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. **Instalar Dependencias de PHP**
+```bash
+composer install
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+3. **Configurar el Entorno**
+   - Copiar el archivo de ejemplo de variables de entorno:
+   ```bash
+   cp .env.example .env
+   ```
+   - Generar la clave de la aplicación:
+   ```bash
+   php artisan key:generate
+   ```
+   - Editar el archivo `.env` con la configuración de tu base de datos:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=univida
+   DB_USERNAME=tu_usuario
+   DB_PASSWORD=tu_contraseña
+   ```
 
-## Learning Laravel
+4. **Crear la Base de Datos**
+   - Crear una base de datos nueva llamada `univida` (o el nombre que hayas configurado en `.env`)
+   - Asegurarte que el usuario tenga permisos sobre la base de datos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+5. **Ejecutar las Migraciones**
+```bash
+php artisan migrate
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+6. **Ejecutar los Seeders**
+```bash
+php artisan db:seed --class=TipoViolenciaSeeder
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+7. **Instalar Dependencias de Frontend y Compilar Assets** (si es necesario)
+```bash
+npm install
+npm run dev
+```
 
-## Laravel Sponsors
+8. **Iniciar el Servidor de Desarrollo**
+```bash
+php artisan serve
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+La aplicación estará disponible en `http://localhost:8000`
 
-### Premium Partners
+## Estructura de la Base de Datos
+El sistema incluye las siguientes tablas principales:
+- `usuario`: Usuarios del sistema
+- `psicologo`: Psicólogos registrados
+- `reporte`: Reportes de casos
+- `tipo_violencia`: Categorías de violencia
+- `chat`: Sistema de chat
+- `mensajes`: Mensajes del chat
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Roles y Accesos
+- **Usuario**: Puede crear reportes y acceder al chat de apoyo
+- **Psicólogo**: Puede ver reportes, marcarlos como resueltos y participar en chats
+- **Administrador**: Gestión completa del sistema
 
-## Contributing
+## Problemas Comunes y Soluciones
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Error de Permisos
+Si encuentras errores de permisos en storage o cache:
+```bash
+chmod -R 775 storage bootstrap/cache
+```
 
-## Code of Conduct
+### Error de Clave de Aplicación
+Si la aplicación muestra error de clave:
+```bash
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Limpiar Caché
+Si encuentras comportamientos inesperados:
+```bash
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+php artisan route:clear
+```
 
-## Security Vulnerabilities
+## Soporte
+Para reportar problemas o sugerir mejoras, por favor crear un issue en el repositorio.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Licencia
+Este proyecto es software propietario. Todos los derechos reservados.
