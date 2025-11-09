@@ -22,4 +22,9 @@ class Usuario extends Model
     {
         return $this->hasMany(Chat::class, 'usuario_id', 'id_usuario');
     }
+
+    public function reportes()
+    {
+        return $this->hasMany(\App\Models\Reporte::class, 'fk_usuario', 'id_usuario');
+    }
 }

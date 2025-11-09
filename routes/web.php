@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ReporteController;
+use App\Models\TipoViolencia;
 use App\Http\Controllers\RecursoController;
 use App\Http\Controllers\EstadisticaController;
 use App\Http\Controllers\AdminController;
@@ -19,7 +20,7 @@ Route::get('/acerca', fn() => view('about'))->name('about');
 Route::get('/recursos', fn() => view('resources'))->name('resources');
 Route::get('/servicios', fn() => view('services'))->name('services');
 Route::get('/chat', fn() => view('chat'))->name('chat');
-Route::get('/reporte', fn() => view('reporte'))->name('reporte');
+// (El formulario de reporte es servido dentro de las rutas protegidas de usuario)
 
 // ===============================
 // LOGIN Y LOGOUT GENERAL
@@ -53,9 +54,12 @@ Route::get('/historias/enviar', fn() => view('historias.enviar'))->name('histori
 // ===============================
 Route::get('/dashboard/psicologo', [PsicologoController::class, 'dashboard'])->name('dashboard.psychologist');
 
-// Submódulos de psicólogo
-Route::get('/psychologist/casos-reportados', [ReporteController::class, 'index'])->name('psychologist.reporte');
-Route::get('/psychologist/chat-apoyo', [ChatController::class, 'index'])->name('psychologist.chat');
+// Submódulos de psicólogo (protegidos por auth.psychologist)
+Route::middleware(['auth.psychologist'])->group(function () {
+    Route::get('/psychologist/casos-reportados', 'App\Http\Controllers\ReporteController@index')->name('psychologist.reporte');
+    Route::post('/psychologist/reporte/{id}/cerrar', 'App\Http\Controllers\ReporteController@cerrarReporte')->name('psychologist.reporte.cerrar');
+    Route::get('/psychologist/chat-apoyo', 'App\Http\Controllers\ChatController@index')->name('psychologist.chat');
+});
 Route::get('/psychologist/recursos-profesionales', [RecursoController::class, 'index'])->name('psychologist.resources');
 Route::get('/psychologist/reportes-estadisticos', [EstadisticaController::class, 'index'])->name('psychologist.estadisticos');
 
@@ -89,7 +93,11 @@ Route::prefix('administrador')->group(function () {
 // ===============================
 Route::middleware(['auth.usuario'])->group(function () {
     Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('inicio.usuario');
-    Route::get('/reporte', fn() => view('reporte'))->name('reporte');
+    Route::get('/reporte', function() {
+        $tiposViolencia = TipoViolencia::all();
+        return view('reporte', compact('tiposViolencia'));
+    })->name('reporte');
+    Route::post('/reporte', [ReporteController::class, 'store'])->name('reporte.store');
     Route::get('/chat', fn() => view('chat'))->name('chat');
     Route::get('/recursos', fn() => view('resources'))->name('resources');
     Route::get('/historias', fn() => view('historias'))->name('historias');
@@ -113,5 +121,6 @@ Route::middleware(['auth.psychologist'])->group(function () {
     Route::get('/psychologist/chat-apoyo', [ChatController::class, 'index'])->name('psychologist.chat');
     Route::get('/psychologist/chat/{id}', [ChatController::class, 'verChat'])->name('psychologist.chat.ver');
     Route::post('/psychologist/chat/tomar', [ChatController::class, 'tomarChat'])->name('psychologist.chat.tomar');
+    Route::post('/psychologist/chat/abrir', [ChatController::class, 'abrirChatParaUsuario'])->name('psychologist.chat.abrir');
     Route::post('/psychologist/chat/enviar', [ChatController::class, 'psicologoEnviarMensaje'])->name('psychologist.chat.enviar');
 });

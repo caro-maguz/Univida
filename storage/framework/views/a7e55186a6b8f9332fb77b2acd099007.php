@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
   <title>Gestión de Chats - Psicólogo</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
@@ -209,7 +209,7 @@
   <div class="container">
     <div class="header-actions">
       <h1>Gestión de Chats de Apoyo</h1>
-      <a href="{{ route('dashboard.psychologist') }}" class="back-btn">← Regresar al Dashboard</a>
+      <a href="<?php echo e(route('dashboard.psychologist')); ?>" class="back-btn">← Regresar al Dashboard</a>
     </div>
 
     <div class="chats-grid">
@@ -217,93 +217,96 @@
       <div class="chat-section">
         <h2 class="section-title">
           📩 Chats en Espera 
-          <span class="badge badge-warning">{{ $chatsEnEspera->count() }}</span>
+          <span class="badge badge-warning"><?php echo e($chatsEnEspera->count()); ?></span>
         </h2>
         
-        @forelse($chatsEnEspera as $chat)
+        <?php $__empty_1 = true; $__currentLoopData = $chatsEnEspera; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
           <div class="chat-card en-espera">
             <div class="chat-info">
-              <span class="usuario-nombre">{{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</span>
-              <span class="chat-tiempo">{{ $chat->iniciado_en->diffForHumans() }}</span>
+              <span class="usuario-nombre"><?php echo e(optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id); ?></span>
+              <span class="chat-tiempo"><?php echo e($chat->iniciado_en->diffForHumans()); ?></span>
             </div>
             
-            @if($chat->ultimoMensaje)
+            <?php if($chat->ultimoMensaje): ?>
               <div class="ultimo-mensaje">
-                {{ $chat->ultimoMensaje->mensaje }}
+                <?php echo e($chat->ultimoMensaje->mensaje); ?>
+
               </div>
-            @endif
+            <?php endif; ?>
             
             <div class="chat-actions">
-              <button class="btn btn-success" onclick="tomarChat({{ $chat->id }})">
+              <button class="btn btn-success" onclick="tomarChat(<?php echo e($chat->id); ?>)">
                 Tomar Chat
               </button>
             </div>
           </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
           <div class="empty-state">No hay chats en espera</div>
-        @endforelse
+        <?php endif; ?>
       </div>
 
       <!-- CHATS ACTIVOS -->
       <div class="chat-section">
         <h2 class="section-title">
           💬 Mis Chats Activos 
-          <span class="badge badge-success">{{ $chatsActivos->count() }}</span>
+          <span class="badge badge-success"><?php echo e($chatsActivos->count()); ?></span>
         </h2>
         
-        @forelse($chatsActivos as $chat)
+        <?php $__empty_1 = true; $__currentLoopData = $chatsActivos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
           <div class="chat-card activo">
             <div class="chat-info">
-              <span class="usuario-nombre">{{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</span>
-              <span class="chat-tiempo">{{ $chat->updated_at->diffForHumans() }}</span>
+              <span class="usuario-nombre"><?php echo e(optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id); ?></span>
+              <span class="chat-tiempo"><?php echo e($chat->updated_at->diffForHumans()); ?></span>
             </div>
             
-            @if($chat->ultimoMensaje)
+            <?php if($chat->ultimoMensaje): ?>
               <div class="ultimo-mensaje">
-                {{ $chat->ultimoMensaje->mensaje }}
+                <?php echo e($chat->ultimoMensaje->mensaje); ?>
+
               </div>
-            @endif
+            <?php endif; ?>
             
             <div class="chat-actions">
-              <a href="{{ route('psychologist.chat.ver', $chat->id) }}" class="btn btn-primary">
+              <a href="<?php echo e(route('psychologist.chat.ver', $chat->id)); ?>" class="btn btn-primary">
                 Ver Chat
               </a>
             </div>
           </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
           <div class="empty-state">No tienes chats activos</div>
-        @endforelse
+        <?php endif; ?>
       </div>
 
       <!-- CHATS FINALIZADOS -->
       <div class="chat-section">
         <h2 class="section-title">
           ✅ Chats Finalizados 
-          <span class="badge badge-secondary">{{ $chatsFinalizados->count() }}</span>
+          <span class="badge badge-secondary"><?php echo e($chatsFinalizados->count()); ?></span>
         </h2>
         
-        @forelse($chatsFinalizados as $chat)
+        <?php $__empty_1 = true; $__currentLoopData = $chatsFinalizados; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
           <div class="chat-card finalizado">
             <div class="chat-info">
-              <span class="usuario-nombre">{{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</span>
-              <span class="chat-tiempo">{{ $chat->finalizado_en->diffForHumans() }}</span>
+              <span class="usuario-nombre"><?php echo e(optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id); ?></span>
+              <span class="chat-tiempo"><?php echo e($chat->finalizado_en->diffForHumans()); ?></span>
             </div>
             
-            @if($chat->ultimoMensaje)
+            <?php if($chat->ultimoMensaje): ?>
               <div class="ultimo-mensaje">
-                {{ $chat->ultimoMensaje->mensaje }}
+                <?php echo e($chat->ultimoMensaje->mensaje); ?>
+
               </div>
-            @endif
+            <?php endif; ?>
             
             <div class="chat-actions">
-              <a href="{{ route('psychologist.chat.ver', $chat->id) }}" class="btn btn-secondary">
+              <a href="<?php echo e(route('psychologist.chat.ver', $chat->id)); ?>" class="btn btn-secondary">
                 Ver Historial
               </a>
             </div>
           </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
           <div class="empty-state">No hay chats finalizados recientes</div>
-        @endforelse
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -315,7 +318,7 @@
       if (!confirm('¿Deseas tomar este chat?')) return;
       
       try {
-        const response = await fetch('{{ route("psychologist.chat.tomar") }}', {
+        const response = await fetch('<?php echo e(route("psychologist.chat.tomar")); ?>', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -343,4 +346,4 @@
     }, 10000);
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/psychologist/chat.blade.php ENDPATH**/ ?>

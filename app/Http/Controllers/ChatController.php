@@ -270,4 +270,60 @@ class ChatController extends Controller
             ]
         ]);
     }
+
+    // ============================================
+    // ABRIR/CREAR CHAT PARA UN USUARIO (PSICÓLOGO)
+    // Usa desde el detalle del reporte: si existe un chat no finalizado lo reutiliza,
+    // si está en 'en_espera' lo toma y lo activa, si no existe crea uno nuevo.
+    public function abrirChatParaUsuario(Request $request)
+    {
+        $request->validate([
+            'usuario_id' => 'required|integer'
+        ]);
+
+        $usuarioId = $request->usuario_id;
+        $psicologoId = session('id') ?? session('psicologo_id');
+
+        // Buscar un chat no finalizado del usuario
+        $chat = Chat::where('usuario_id', $usuarioId)
+            ->whereIn('estado', ['en_espera', 'activo'])
+            ->first();
+
+        if ($chat) {
+            if ($chat->estado === 'en_espera') {
+                $chat->update([
+                    'psicologo_id' => $psicologoId,
+                    'estado' => 'activo'
+                ]);
+
+                // Mensaje automático informando que el profesional se unió
+                Mensaje::create([
+                    'chat_id' => $chat->id,
+                    'tipo_remitente' => 'sistema',
+                    'mensaje' => 'Un profesional se ha unido a la conversación.',
+                    'leido' => false
+                ]);
+            } elseif ($chat->estado === 'activo' && !$chat->psicologo_id) {
+                // Asignar psicólogo si aún no tiene
+                $chat->update(['psicologo_id' => $psicologoId]);
+            }
+        } else {
+            // Crear un chat activo asignado al psicólogo
+            $chat = Chat::create([
+                'usuario_id' => $usuarioId,
+                'psicologo_id' => $psicologoId,
+                'estado' => 'activo',
+                'iniciado_en' => now()
+            ]);
+
+            Mensaje::create([
+                'chat_id' => $chat->id,
+                'tipo_remitente' => 'sistema',
+                'mensaje' => 'Un profesional ha iniciado la conversación.',
+                'leido' => false
+            ]);
+        }
+
+        return response()->json(['success' => true, 'chat_id' => $chat->id]);
+    }
 }

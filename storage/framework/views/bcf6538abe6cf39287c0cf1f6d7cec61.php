@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
   <title>Casos Reportados - PsicoSalud Pro</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
@@ -396,10 +396,10 @@
 <body>
   <header>
     <div class="logo-section">
-      <img src="{{ asset('img/imagenpsicologo.png') }}" alt="Foto de perfil" class="avatar" onerror="this.src='https://via.placeholder.com/48/1976d2/FFFFFF?text=P';">
+      <img src="<?php echo e(asset('img/imagenpsicologo.png')); ?>" alt="Foto de perfil" class="avatar" onerror="this.src='https://via.placeholder.com/48/1976d2/FFFFFF?text=P';">
       <h1 class="page-title">Casos Reportados</h1>
     </div>
-    <a href="{{ route('dashboard.psychologist') }}" class="back-btn">
+    <a href="<?php echo e(route('dashboard.psychologist')); ?>" class="back-btn">
       <i class="fas fa-arrow-left"></i> Volver
     </a>
   </header>
@@ -430,33 +430,33 @@
     </div>
 
     <div class="cases-grid" id="casesGrid">
-      @if(!empty($reportes) && $reportes->count() > 0)
-        @foreach($reportes as $r)
+      <?php if(!empty($reportes) && $reportes->count() > 0): ?>
+        <?php $__currentLoopData = $reportes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <div class="case-card" tabindex="0" role="button"
-  data-id="R{{ $r->id_reporte ?? $r->id ?? $loop->index }}"
-  data-reporte-id="{{ $r->id_reporte ?? $r->id ?? $loop->index }}"
-      data-usuario-id="{{ $r->fk_usuario ?? optional($r->usuario)->id_usuario ?? '' }}"
-      data-nombre="{{ optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}"
-      data-fecha="{{ $r->fecha }}"
+  data-id="R<?php echo e($r->id_reporte ?? $r->id ?? $loop->index); ?>"
+  data-reporte-id="<?php echo e($r->id_reporte ?? $r->id ?? $loop->index); ?>"
+      data-usuario-id="<?php echo e($r->fk_usuario ?? optional($r->usuario)->id_usuario ?? ''); ?>"
+      data-nombre="<?php echo e(optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido')); ?>"
+      data-fecha="<?php echo e($r->fecha); ?>"
       data-urgencia="media"
-      data-estado="{{ $r->estado ?? 'nuevo' }}"
-      data-detalles="{{ $r->descripcion }}">
+      data-estado="<?php echo e($r->estado ?? 'nuevo'); ?>"
+      data-detalles="<?php echo e($r->descripcion); ?>">
             <div class="case-header">
               <div>
-                <div class="case-name">{{ optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}</div>
-                <div class="case-id">R{{ $r->id ?? $loop->index }}</div>
+                <div class="case-name"><?php echo e(optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido')); ?></div>
+                <div class="case-id">R<?php echo e($r->id ?? $loop->index); ?></div>
               </div>
               <span class="urgency-badge urgency-media">Media</span>
             </div>
-            <div class="case-date">📅 {{ date('d/m/Y', strtotime($r->fecha)) }}</div>
+            <div class="case-date">📅 <?php echo e(date('d/m/Y', strtotime($r->fecha))); ?></div>
             <div class="case-footer">
-              <span class="status-badge status-{{ $r->estado ?? 'nuevo' }}">{{ ucfirst($r->estado ?? 'nuevo') }}</span>
+              <span class="status-badge status-<?php echo e($r->estado ?? 'nuevo'); ?>"><?php echo e(ucfirst($r->estado ?? 'nuevo')); ?></span>
             </div>
           </div>
-        @endforeach
-      @else
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php else: ?>
         <p style="grid-column:1/-1; text-align:center; color:#7f8c8d;">No hay casos reportados.</p>
-      @endif
+      <?php endif; ?>
     </div>
   </div>
 
@@ -494,7 +494,7 @@
   </div>
 
   <script>
-    const csrfToken = '{{ csrf_token() }}';
+    const csrfToken = '<?php echo e(csrf_token()); ?>';
     // Filtrado y búsqueda sobre los elementos ya renderizados en el DOM
     const cards = Array.from(document.querySelectorAll('.case-card'));
 
@@ -608,7 +608,7 @@
         }
 
         try {
-          const res = await fetch('{{ route("psychologist.chat.abrir") }}', {
+          const res = await fetch('<?php echo e(route("psychologist.chat.abrir")); ?>', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -645,7 +645,7 @@
           if (!confirm('¿Marcar este caso como resuelto? Esta acción moverá el caso a la sección "Cerrado".')) return;
 
           try {
-          const baseUrl = '{{ url("/") }}';
+          const baseUrl = '<?php echo e(url("/")); ?>';
           const url = `${baseUrl}/psychologist/reporte/${reporteId}/cerrar`;
           console.log('URL de cierre:', url); // Para diagnóstico
             
@@ -691,4 +691,4 @@
       }
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/psychologist/reporte.blade.php ENDPATH**/ ?>

@@ -15,9 +15,16 @@ class PsychologistAuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        \Log::info('Verificando autenticación de psicólogo:', [
+            'psicologo_id' => session('psicologo_id'),
+            'session' => session()->all(),
+            'route' => $request->route()->getName()
+        ]);
+
         if (!session('psicologo_id')) {
-            return redirect()->route('login.psychologist')->withErrors([
-                'error' => 'Debes iniciar sesión para acceder a esta página.'
+            \Log::warning('Acceso denegado: No hay sesión de psicólogo');
+            return redirect()->route('login.user')->withErrors([
+                'error' => 'Debes iniciar sesión como psicólogo para acceder a esta página.'
             ]);
         }
         return $next($request);

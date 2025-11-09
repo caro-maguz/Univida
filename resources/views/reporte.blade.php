@@ -189,14 +189,26 @@
       <!-- Formulario -->
       <section class="form-section" aria-labelledby="titulo-formulario">
         <h2 id="titulo-formulario">Tu información es confidencial 💙</h2>
-        <form action="#" method="post">
+        @if(session('success'))
+          <div style="background:#e8f5e9;padding:12px;border-radius:10px;margin-bottom:12px;color:#2e7d32;border:1px solid #c8e6c9;">{{ session('success') }}</div>
+        @endif
+        @if($errors->any())
+          <div style="background:#ffebee;padding:12px;border-radius:10px;margin-bottom:12px;color:#c62828;border:1px solid #ffcdd2;">
+            <ul style="margin:0;padding-left:18px;">
+              @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+        <form action="{{ route('reporte.store') }}" method="post">
+          @csrf
           <label for="violencia">Tipo de violencia</label>
-          <select id="violencia" name="violencia" required>
+          <select id="violencia" name="fk_tipo_violencia" required>
             <option value="">Selecciona un tipo</option>
-            <option value="fisica">Física</option>
-            <option value="psicologica">Psicológica</option>
-            <option value="sexual">Sexual</option>
-            <option value="economica">Económica</option>
+            @foreach($tiposViolencia ?? [] as $tipo)
+              <option value="{{ $tipo->id_tipo_violencia ?? $tipo->id }}">{{ $tipo->nombre ?? $tipo->tipo }}</option>
+            @endforeach
           </select>
 
           <label for="descripcion">Descripción del caso</label>
@@ -206,7 +218,7 @@
           <input type="date" id="fecha" name="fecha" required>
 
           <div class="checkbox-container">
-            <input type="checkbox" id="anonimo" name="anonimo">
+            <input type="checkbox" id="anonimo" name="anonimo" value="1">
             <label for="anonimo">Reporte anónimo</label>
           </div>
 

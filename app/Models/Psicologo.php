@@ -28,4 +28,10 @@ class Psicologo extends Model
     {
         return $this->hasMany(Chat::class, 'psicologo_id', 'id_psicologo');
     }
+
+    // Reportes asignados al psicólogo
+    public function reportesAsignados()
+    {
+        return $this->hasMany(\App\Models\Reporte::class, 'fk_psicologo', 'id_psicologo');
+    }
 }

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Chat - {{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</title>
+  <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+  <title>Chat - <?php echo e(optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id); ?></title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -209,14 +209,16 @@
   <header>
     <div class="header-info">
       <h1>
-        💬 Chat con {{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}
-        <span class="estado-badge {{ $chat->estado === 'activo' ? 'badge-activo' : 'badge-finalizado' }}">
-          {{ $chat->estado === 'activo' ? 'Activo' : 'Finalizado' }}
+        💬 Chat con <?php echo e(optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id); ?>
+
+        <span class="estado-badge <?php echo e($chat->estado === 'activo' ? 'badge-activo' : 'badge-finalizado'); ?>">
+          <?php echo e($chat->estado === 'activo' ? 'Activo' : 'Finalizado'); ?>
+
         </span>
       </h1>
-      <p>Iniciado: {{ $chat->iniciado_en->format('d/m/Y H:i') }}</p>
+      <p>Iniciado: <?php echo e($chat->iniciado_en->format('d/m/Y H:i')); ?></p>
     </div>
-    <a href="{{ route('psychologist.chat') }}" class="back-btn">← Volver</a>
+    <a href="<?php echo e(route('psychologist.chat')); ?>" class="back-btn">← Volver</a>
   </header>
 
   <main>
@@ -226,18 +228,18 @@
       </div>
 
       <div class="messages" id="messages-container">
-        @foreach($chat->mensajes as $mensaje)
-          <div class="message {{ $mensaje->tipo_remitente }}" data-mensaje-id="{{ $mensaje->id }}">
-            <div>{{ $mensaje->mensaje }}</div>
-            <div class="message-time">{{ $mensaje->created_at->format('H:i') }}</div>
+        <?php $__currentLoopData = $chat->mensajes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mensaje): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <div class="message <?php echo e($mensaje->tipo_remitente); ?>" data-mensaje-id="<?php echo e($mensaje->id); ?>">
+            <div><?php echo e($mensaje->mensaje); ?></div>
+            <div class="message-time"><?php echo e($mensaje->created_at->format('H:i')); ?></div>
           </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>
 
-      @if($chat->estado === 'activo')
+      <?php if($chat->estado === 'activo'): ?>
         <div class="chat-input-container">
           <form class="chat-input" id="chat-form">
-            @csrf
+            <?php echo csrf_field(); ?>
             <input 
               type="text" 
               id="mensaje-input" 
@@ -249,18 +251,18 @@
             <button type="submit" id="enviar-btn">Enviar</button>
           </form>
         </div>
-      @else
+      <?php else: ?>
         <div class="chat-disabled-overlay">
           Este chat ha sido finalizado y no se pueden enviar más mensajes
         </div>
-      @endif
+      <?php endif; ?>
     </div>
   </main>
 
   <script>
-    const chatId = {{ $chat->id }};
-    const chatActivo = {{ $chat->estado === 'activo' ? 'true' : 'false' }};
-    let ultimoMensajeId = {{ $chat->mensajes->last()->id ?? 0 }};
+    const chatId = <?php echo e($chat->id); ?>;
+    const chatActivo = <?php echo e($chat->estado === 'activo' ? 'true' : 'false'); ?>;
+    let ultimoMensajeId = <?php echo e($chat->mensajes->last()->id ?? 0); ?>;
     let polling;
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -284,7 +286,7 @@
         btn.disabled = true;
         
         try {
-          const response = await fetch('{{ route("psychologist.chat.enviar") }}', {
+          const response = await fetch('<?php echo e(route("psychologist.chat.enviar")); ?>', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -331,7 +333,7 @@
     // Polling para nuevos mensajes
     async function verificarNuevosMensajes() {
       try {
-        const response = await fetch(`{{ route("chat.nuevos") }}?chat_id=${chatId}&ultimo_mensaje_id=${ultimoMensajeId}`);
+        const response = await fetch(`<?php echo e(route("chat.nuevos")); ?>?chat_id=${chatId}&ultimo_mensaje_id=${ultimoMensajeId}`);
         const data = await response.json();
         
         if (data.mensajes && data.mensajes.length > 0) {
@@ -353,3 +355,4 @@
   </script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\univida\resources\views/psychologist/chat-detalle.blade.php ENDPATH**/ ?>
