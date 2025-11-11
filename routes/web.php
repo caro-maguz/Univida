@@ -126,6 +126,10 @@ Route::middleware(['auth.usuario'])->group(function () {
     Route::post('/reporte', [ReporteController::class, 'store'])->name('reporte.store');
     Route::get('/chat', fn() => view('chat'))->name('chat');
     Route::get('/recursos', [RecursoController::class, 'centro'])->name('resources');
+    // Notificaciones motivacionales
+    Route::post('/notificacion/config', [App\Http\Controllers\NotificacionMotivacionalController::class, 'guardarConfig'])->name('notificacion.config');
+    Route::get('/notificacion/siguiente', [App\Http\Controllers\NotificacionMotivacionalController::class, 'siguiente'])->name('notificacion.siguiente');
+    Route::post('/notificacion/leida', [App\Http\Controllers\NotificacionMotivacionalController::class, 'marcarLeida'])->name('notificacion.leida');
     // Nota: La ruta /historias está registrada fuera de este grupo y
     // apunta a HistoriaController@index para mostrar historias públicas.
 });

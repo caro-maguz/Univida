@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Notificacion extends Model
 {
     protected $table = 'notificacion';
+    protected $primaryKey = 'id_notificacion';
+    public $timestamps = false;
     protected $fillable = ['fecha_hora', 'mensaje', 'fk_tipo_notificacion', 'fk_usuario', 'leida'];
 
     public function tipoNotificacion()
