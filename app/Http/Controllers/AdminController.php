@@ -20,7 +20,8 @@ class AdminController extends Controller
     }
 
     $psicologos = Psicologo::all();
-    return view('administrador.dashboard', compact('psicologos'));
+    $historiasPendientes = \App\Models\Historia::where('estado', 'pendiente')->count();
+    return view('administrador.dashboard', compact('psicologos', 'historiasPendientes'));
 }
 
     // CRUD DE PSICÓLOGOS

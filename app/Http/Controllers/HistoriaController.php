@@ -8,18 +8,13 @@ use App\Models\Historia;
 class HistoriaController extends Controller
 {
     /**
-     * Mostrar historias públicas (anónimas o del usuario actual)
+     * Mostrar historias públicas (anónimas y aprobadas)
      */
     public function index()
     {
-        // Mostrar historias anónimas + historias del usuario logueado (si está logueado)
-        $usuarioId = session('id');
+        // Solo mostrar historias aprobadas por el moderador
         $historias = Historia::where('anonimo', true)
-            ->orWhere(function ($query) use ($usuarioId) {
-                if ($usuarioId) {
-                    $query->where('usuario_id', $usuarioId);
-                }
-            })
+            ->where('estado', 'aprobada')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -31,7 +26,9 @@ class HistoriaController extends Controller
      */
     public function mas()
     {
+        // Solo historias aprobadas
         $historias = Historia::where('anonimo', true)
+            ->where('estado', 'aprobada')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -60,8 +57,9 @@ class HistoriaController extends Controller
             'contenido' => $request->historia,
             'anonimo' => true,
             'usuario_id' => session('id') ?? null,
+            'estado' => 'pendiente', // Por defecto pendiente de moderación
         ]);
 
-        return redirect()->route('historias')->with('success', 'Historia enviada con éxito 💙');
+        return redirect()->route('historias')->with('success', 'Historia enviada con éxito 💙 Será revisada por un moderador antes de publicarse.');
     }
 }

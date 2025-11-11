@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Historias Anónimas - Univida</title>
-  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -114,6 +113,10 @@
       cursor: pointer;
       transition: 0.3s;
       width: 100%;
+      text-decoration: none; /* Agregado para quitar subrayado de los enlaces */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .btn:hover {
@@ -153,7 +156,7 @@
 <body>
   <!-- Header -->
   <header>
-    <a href="{{ route('historias') }}">Regresar a Historias</a>
+    <a href="<?php echo e(route('inicio.usuario')); ?>">Regresar</a>
   </header>
 
   <!-- Main -->
@@ -161,7 +164,7 @@
     <article class="container">
       <!-- Mascota -->
       <section class="image-section" aria-hidden="true">
-        <img src="{{ asset('img/img3.png') }}" alt="Mascota Univida animada">
+        <img src="<?php echo e(asset('img/img3.png')); ?>" alt="Mascota Univida animada">
       </section>
 
       <!-- Formulario -->
@@ -169,26 +172,32 @@
         <h2 id="titulo-formulario">Historias Anónimas</h2>
         <p>Estas son historias reales que nos ayudan a entender y prevenir.</p>
 
-        <div class="history-list">
-          @if(isset($historias) && $historias->count() > 0)
-            @foreach($historias as $h)
-              <div style="margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed #e6eef8;">
-                <p style="margin:0;"><strong>Historia</strong> · <small style="color:#54718a">{{ $h->created_at ? $h->created_at->format('d/m/Y') : '' }}</small></p>
-                <p style="margin:6px 0 0;">{!! nl2br(e(\Illuminate\Support\Str::limit($h->contenido, 800))) !!}</p>
-              </div>
-            @endforeach
+        <?php if(session('success')): ?>
+          <div style="background:#e6ffed;border:1px solid #b7f2c7;padding:10px;border-radius:8px;margin-bottom:12px;color:#064e1b;">
+            <?php echo e(session('success')); ?>
 
-            {{-- Paginación --}}
-            <div style="margin-top:16px; display:flex; justify-content:center;">
-              {{ $historias->links() }}
-            </div>
-          @else
-            <p>No hay historias publicadas aún.</p>
-          @endif
+          </div>
+        <?php endif; ?>
+
+        <div class="history-list">
+          <?php if(isset($historias) && $historias->count() > 0): ?>
+            <?php $__currentLoopData = $historias->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $h): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed #e6eef8;">
+                <p style="margin:0;"><small style="color:#54718a"><?php echo e($h->created_at ? $h->created_at->format('d/m/Y') : ''); ?></small></p>
+                <p style="margin:6px 0 0;"><?php echo nl2br(e(\Illuminate\Support\Str::limit($h->contenido, 350))); ?></p>
+              </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+          <?php else: ?>
+            <p>No hay historias por mostrar.</p>
+          <?php endif; ?>
         </div>
 
+        <div class="buttons">
+          <a href="<?php echo e(route('historias.enviar')); ?>" class="btn">Enviar Historia</a>
+          <a href="<?php echo e(route('historias.mas')); ?>" class="btn">Ver más Historias</a>
+        </div>
       </section>
     </article>
   </main>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/historias.blade.php ENDPATH**/ ?>

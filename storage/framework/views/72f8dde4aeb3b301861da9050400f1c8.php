@@ -153,7 +153,7 @@
 <body>
   <!-- Header -->
   <header>
-    <a href="{{ route('historias') }}">Regresar a Historias</a>
+    <a href="<?php echo e(route('historias')); ?>">Regresar a Historias</a>
   </header>
 
   <!-- Main -->
@@ -161,7 +161,7 @@
     <article class="container">
       <!-- Mascota -->
       <section class="image-section" aria-hidden="true">
-        <img src="{{ asset('img/img3.png') }}" alt="Mascota Univida animada">
+        <img src="<?php echo e(asset('img/img3.png')); ?>" alt="Mascota Univida animada">
       </section>
 
       <!-- Formulario -->
@@ -170,25 +170,26 @@
         <p>Estas son historias reales que nos ayudan a entender y prevenir.</p>
 
         <div class="history-list">
-          @if(isset($historias) && $historias->count() > 0)
-            @foreach($historias as $h)
+          <?php if(isset($historias) && $historias->count() > 0): ?>
+            <?php $__currentLoopData = $historias; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $h): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <div style="margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed #e6eef8;">
-                <p style="margin:0;"><strong>Historia</strong> · <small style="color:#54718a">{{ $h->created_at ? $h->created_at->format('d/m/Y') : '' }}</small></p>
-                <p style="margin:6px 0 0;">{!! nl2br(e(\Illuminate\Support\Str::limit($h->contenido, 800))) !!}</p>
+                <p style="margin:0;"><strong>Historia</strong> · <small style="color:#54718a"><?php echo e($h->created_at ? $h->created_at->format('d/m/Y') : ''); ?></small></p>
+                <p style="margin:6px 0 0;"><?php echo nl2br(e(\Illuminate\Support\Str::limit($h->contenido, 800))); ?></p>
               </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-            {{-- Paginación --}}
+            
             <div style="margin-top:16px; display:flex; justify-content:center;">
-              {{ $historias->links() }}
+              <?php echo e($historias->links()); ?>
+
             </div>
-          @else
+          <?php else: ?>
             <p>No hay historias publicadas aún.</p>
-          @endif
+          <?php endif; ?>
         </div>
 
       </section>
     </article>
   </main>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/historias-mas.blade.php ENDPATH**/ ?>

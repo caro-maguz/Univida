@@ -182,7 +182,7 @@
 <body>
   <!-- Header -->
   <header>
-    <a href="{{ route('historias') }}">Regresar a Historias</a>
+    <a href="<?php echo e(route('historias')); ?>">Regresar a Historias</a>
   </header>
 
   <!-- Main -->
@@ -190,7 +190,7 @@
     <article class="container">
       <!-- Mascota -->
       <section class="image-section" aria-hidden="true">
-        <img src="{{ asset('img/img2.png') }}" alt="Mascota Univida animada">
+        <img src="<?php echo e(asset('img/img2.png')); ?>" alt="Mascota Univida animada">
       </section>
 
       <!-- Formulario -->
@@ -204,26 +204,26 @@
           Esto nos ayuda a mantener un espacio seguro para todos.
         </div>
 
-        @if(session('success'))
-          <div class="success-message" style="display:block">{{ session('success') }}</div>
-        @endif
+        <?php if(session('success')): ?>
+          <div class="success-message" style="display:block"><?php echo e(session('success')); ?></div>
+        <?php endif; ?>
 
-        @if($errors->any())
+        <?php if($errors->any()): ?>
           <div style="background:#ffebee;padding:12px;border-radius:10px;margin-bottom:12px;color:#c62828;border:1px solid #ffcdd2;">
             <ul style="margin:0;padding-left:18px;">
-              @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-              @endforeach
+              <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <li><?php echo e($error); ?></li>
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
           </div>
-        @endif
+        <?php endif; ?>
 
-        <form action="{{ route('historias.store') }}" method="POST">
-          @csrf
+        <form action="<?php echo e(route('historias.store')); ?>" method="POST">
+          <?php echo csrf_field(); ?>
           <label for="historia">Tu historia</label>
-          <textarea id="historia" name="historia" placeholder="Escribe aquí tu historia..." required>{{ old('historia') }}</textarea>
+          <textarea id="historia" name="historia" placeholder="Escribe aquí tu historia..." required><?php echo e(old('historia')); ?></textarea>
 
-          {{-- El envío siempre será anónimo en el backend; enviamos hidden por claridad --}}
+          
           <input type="hidden" name="anonimo" value="1">
 
           <button type="submit">Enviar Historia</button>
@@ -237,9 +237,9 @@
       document.getElementById("successMessage").style.display = "block";
       // Opcional: redirigir después de 2 segundos
       setTimeout(() => {
-        window.location.href = "{{ route('historias') }}";
+        window.location.href = "<?php echo e(route('historias')); ?>";
       }, 2000);
     }
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/historias-enviar.blade.php ENDPATH**/ ?>

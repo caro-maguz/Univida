@@ -42,21 +42,22 @@
       <button onclick="showSection('crud')" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg">
         <i class="fas fa-user-cog mr-2"></i> Psicólogos
       </button>
-      <a href="{{ route('administrador.recursos.index') }}" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg">
+      <a href="<?php echo e(route('administrador.recursos.index')); ?>" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg">
         <i class="fas fa-book mr-2"></i> Recursos
       </a>
-      <a href="{{ route('administrador.historias.index') }}" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg relative">
+      <a href="<?php echo e(route('administrador.historias.index')); ?>" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg relative">
         <i class="fas fa-comments mr-2"></i> Historias
-        @if(isset($historiasPendientes) && $historiasPendientes > 0)
+        <?php if(isset($historiasPendientes) && $historiasPendientes > 0): ?>
           <span class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
-            {{ $historiasPendientes }}
+            <?php echo e($historiasPendientes); ?>
+
           </span>
-        @endif
+        <?php endif; ?>
       </a>
     </nav>
     <div class="absolute bottom-0 w-full p-4 border-t border-blue-400">
-    <form action="{{ route('logout.admin') }}" method="POST">
-        @csrf
+    <form action="<?php echo e(route('logout.admin')); ?>" method="POST">
+        <?php echo csrf_field(); ?>
         <button type="submit" class="flex items-center text-red-200 hover:text-white w-full border-none bg-transparent p-2 cursor-pointer">
             <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
         </button>
@@ -68,7 +69,8 @@
   <!-- Contenido principal -->
   <div class="ml-64 p-6">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">
-      Bienvenido, {{ session('admin_nombre') }}
+      Bienvenido, <?php echo e(session('admin_nombre')); ?>
+
     </h1>
 
     <!-- Sección Dashboard -->
@@ -76,12 +78,12 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-unividaBlue">
           <p class="text-gray-600 text-sm">Psicólogos registrados</p>
-          <p class="text-3xl font-bold mt-2 text-unividaBlue">{{ $psicologos->count() }}</p>
+          <p class="text-3xl font-bold mt-2 text-unividaBlue"><?php echo e($psicologos->count()); ?></p>
         </div>
         <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-yellow-500">
           <p class="text-gray-600 text-sm">Historias pendientes</p>
-          <p class="text-3xl font-bold mt-2 text-yellow-600">{{ $historiasPendientes ?? 0 }}</p>
-          <a href="{{ route('administrador.historias.index') }}" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
+          <p class="text-3xl font-bold mt-2 text-yellow-600"><?php echo e($historiasPendientes ?? 0); ?></p>
+          <a href="<?php echo e(route('administrador.historias.index')); ?>" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
             Ver historias →
           </a>
         </div>
@@ -92,14 +94,14 @@
     <div id="crud" class="section">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Gestión de psicólogos</h2>
-        <a href="{{ route('administrador.create') }}" class="bg-unividaBlue text-white px-4 py-2 rounded-lg flex items-center gap-2">
+        <a href="<?php echo e(route('administrador.create')); ?>" class="bg-unividaBlue text-white px-4 py-2 rounded-lg flex items-center gap-2">
           <i class="fas fa-plus"></i> Agregar
         </a>
       </div>
 
-      @if (session('success'))
-        <div class="mb-4 text-green-600 font-semibold">{{ session('success') }}</div>
-      @endif
+      <?php if(session('success')): ?>
+        <div class="mb-4 text-green-600 font-semibold"><?php echo e(session('success')); ?></div>
+      <?php endif; ?>
 
       <div class="bg-white rounded-2xl shadow overflow-hidden">
         <table class="min-w-full">
@@ -112,21 +114,21 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
-            @foreach ($psicologos as $psicologo)
+            <?php $__currentLoopData = $psicologos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $psicologo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <tr>
-                <td class="px-6 py-4">{{ $psicologo->id_psicologo }}</td>
-                <td class="px-6 py-4 font-medium text-gray-800">{{ $psicologo->nombre }}</td>
-                <td class="px-6 py-4 text-gray-600">{{ $psicologo->correo }}</td>
+                <td class="px-6 py-4"><?php echo e($psicologo->id_psicologo); ?></td>
+                <td class="px-6 py-4 font-medium text-gray-800"><?php echo e($psicologo->nombre); ?></td>
+                <td class="px-6 py-4 text-gray-600"><?php echo e($psicologo->correo); ?></td>
                 <td class="px-6 py-4 flex items-center space-x-3">
-                  <a href="{{ route('administrador.edit', $psicologo->id_psicologo) }}" class="text-blue-600"><i class="fas fa-edit"></i></a>
-                  <form action="{{ route('administrador.destroy', $psicologo->id_psicologo) }}" method="POST" onsubmit="return confirm('¿Eliminar este psicólogo?')">
-                    @csrf
-                    @method('DELETE')
+                  <a href="<?php echo e(route('administrador.edit', $psicologo->id_psicologo)); ?>" class="text-blue-600"><i class="fas fa-edit"></i></a>
+                  <form action="<?php echo e(route('administrador.destroy', $psicologo->id_psicologo)); ?>" method="POST" onsubmit="return confirm('¿Eliminar este psicólogo?')">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
                     <button type="submit" class="text-red-600"><i class="fas fa-trash"></i></button>
                   </form>
                 </td>
               </tr>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </tbody>
         </table>
       </div>
@@ -141,3 +143,4 @@
   </script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\univida\resources\views/administrador/dashboard.blade.php ENDPATH**/ ?>

@@ -100,6 +100,15 @@ Route::prefix('administrador')->group(function () {
     Route::get('/recursos/{id}/editar', [RecursoController::class, 'edit'])->name('administrador.recursos.edit');
     Route::put('/recursos/{id}', [RecursoController::class, 'update'])->name('administrador.recursos.update');
     Route::delete('/recursos/{id}', [RecursoController::class, 'destroy'])->name('administrador.recursos.destroy');
+
+    // Gestión de historias (moderación)
+    Route::get('/historias', [App\Http\Controllers\AdminHistoriaController::class, 'index'])->name('administrador.historias.index');
+    Route::get('/historias/{id}', [App\Http\Controllers\AdminHistoriaController::class, 'show'])->name('administrador.historias.show');
+    Route::post('/historias/{id}/aprobar', [App\Http\Controllers\AdminHistoriaController::class, 'aprobar'])->name('administrador.historias.aprobar');
+    Route::post('/historias/{id}/rechazar', [App\Http\Controllers\AdminHistoriaController::class, 'rechazar'])->name('administrador.historias.rechazar');
+    Route::get('/historias/{id}/editar', [App\Http\Controllers\AdminHistoriaController::class, 'edit'])->name('administrador.historias.edit');
+    Route::put('/historias/{id}', [App\Http\Controllers\AdminHistoriaController::class, 'update'])->name('administrador.historias.update');
+    Route::delete('/historias/{id}', [App\Http\Controllers\AdminHistoriaController::class, 'destroy'])->name('administrador.historias.destroy');
 });
 
 // Ruta pública para descargar recursos
