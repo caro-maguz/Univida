@@ -164,7 +164,7 @@
     <article class="container">
       <!-- Mascota -->
       <section class="image-section" aria-hidden="true">
-        <img src="{{ asset('img/mascotainicio.png') }}" alt="Mascota Univida animada">
+        <img src="{{ asset('img/img3.png') }}" alt="Mascota Univida animada">
       </section>
 
       <!-- Formulario -->
@@ -172,9 +172,23 @@
         <h2 id="titulo-formulario">Historias Anónimas</h2>
         <p>Estas son historias reales que nos ayudan a entender y prevenir.</p>
 
+        @if(session('success'))
+          <div style="background:#e6ffed;border:1px solid #b7f2c7;padding:10px;border-radius:8px;margin-bottom:12px;color:#064e1b;">
+            {{ session('success') }}
+          </div>
+        @endif
+
         <div class="history-list">
-          <p><strong>Historia 1:</strong> Texto...</p>
-          <p><strong>Historia 2:</strong> Texto...</p>
+          @if(isset($historias) && $historias->count() > 0)
+            @foreach($historias->take(3) as $h)
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed #e6eef8;">
+                <p style="margin:0;"><small style="color:#54718a">{{ $h->created_at ? $h->created_at->format('d/m/Y') : '' }}</small></p>
+                <p style="margin:6px 0 0;">{!! nl2br(e(\Illuminate\Support\Str::limit($h->contenido, 350))) !!}</p>
+              </div>
+            @endforeach
+          @else
+            <p>No hay historias por mostrar.</p>
+          @endif
         </div>
 
         <div class="buttons">

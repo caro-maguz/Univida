@@ -119,7 +119,8 @@
     <h2>Registro de Usuario</h2>
 
     <!-- Formulario -->
-    <form id="registroForm">
+    <form id="registroForm" action="{{ route('register.user.process') }}" method="POST">
+      @csrf
       <div class="form-group">
         <label for="alias">Alias / Nombre de usuario</label>
         <input type="text" id="alias" name="alias" placeholder="Ej: Juan123" required minlength="3">
@@ -145,7 +146,7 @@
     </div>
   </div>
 
-  <script>
+    <script>
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       const alias = document.getElementById("alias").value.trim();
       const correo = document.getElementById("correo").value.trim();
@@ -166,9 +167,7 @@
         e.preventDefault();
         return;
       }
-
-      alert("Registro exitoso 🎉\nEn un entorno real, se crearía tu cuenta.");
-      // Aquí iría la lógica de envío al backend
+      // Si pasa las validaciones cliente, el formulario se enviará al servidor.
     });
   </script>
 </body>

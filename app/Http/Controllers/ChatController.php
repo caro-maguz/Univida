@@ -128,7 +128,8 @@ class ChatController extends Controller
     public function finalizarChat(Request $request)
     {
         $chatId = $request->chat_id;
-        $usuarioId = session('usuario_id');
+        // Usar la clave de sesión unificada 'id' para el usuario (coherente con mostrarChat/enviarMensaje)
+        $usuarioId = session('id');
 
         $chat = Chat::where('id', $chatId)
             ->where('usuario_id', $usuarioId)

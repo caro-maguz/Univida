@@ -196,8 +196,8 @@ $inicial = strtoupper(substr($usuario, 0, 1));
     <div class="dropdown">
       <a href="#">Mi Perfil</a>
       <a href="#">Configuración</a>
-      <form action="{{ route('logout.usuario') }}" method="POST" style="margin:0;">
-        @csrf
+      <form action="<?php echo e(route('logout.usuario')); ?>" method="POST" style="margin:0;">
+        <?php echo csrf_field(); ?>
         <button type="submit" style="width:100%; text-align:left; padding:12px; background:none; border:none; cursor:pointer; font-family:'Delius', cursive; font-size:0.95rem; color:#333;">
           Cerrar sesión
         </button>
@@ -215,16 +215,16 @@ $inicial = strtoupper(substr($usuario, 0, 1));
         <p>Cada día es una nueva oportunidad para avanzar. Estamos aquí para apoyarte.</p>
 
         <div class="buttons">
-          <a href="{{ route('reporte') }}" class="btn">Reportar Caso</a>
-          <a href="{{ route('chat') }}" class="btn">Chat de Apoyo</a>
-          <a href="{{ route('resources') }}" class="btn">Ver Recursos</a>
-          <a href="{{ route('historias') }}" class="btn">Historias Anónimas</a>
+          <a href="<?php echo e(route('reporte')); ?>" class="btn">Reportar Caso</a>
+          <a href="<?php echo e(route('chat')); ?>" class="btn">Chat de Apoyo</a>
+          <a href="<?php echo e(route('resources')); ?>" class="btn">Ver Recursos</a>
+          <a href="<?php echo e(route('historias')); ?>" class="btn">Historias Anónimas</a>
         </div>
       </section>
 
       <!-- Mascota -->
       <div class="mascota">
-        <img src="{{ asset('img/img4.png') }}" alt="Mascota Univida">
+        <img src="<?php echo e(asset('img/img4.png')); ?>" alt="Mascota Univida">
       </div>
     </div>
   </main>
@@ -240,4 +240,4 @@ $inicial = strtoupper(substr($usuario, 0, 1));
     }
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/dashboard-user.blade.php ENDPATH**/ ?>

@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PsicologoController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\HistoriaController;
 
 // ===============================
 // PÁGINAS PRINCIPALES Y BÁSICAS
@@ -40,14 +41,18 @@ Route::post('/logout/admin', [LoginController::class, 'logoutAdmin'])->name('log
 // RUTAS PARA USUARIO
 // ===============================
 Route::get('/registro/usuario', fn() => view('register-user'))->name('register.user');
+// Procesar registro de usuario
+Route::post('/registro/usuario', [App\Http\Controllers\UsuarioController::class, 'store'])->name('register.user.process');
 Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('inicio.usuario');
 
 // ===============================
 // RUTAS PARA HISTORIAS
 // ===============================
 Route::get('/historias', fn() => view('historias'))->name('historias');
-Route::get('/historias/mas', fn() => view('historias.mas'))->name('historias.mas');
-Route::get('/historias/enviar', fn() => view('historias.enviar'))->name('historias.enviar');
+Route::get('/historias', [HistoriaController::class, 'index'])->name('historias');
+Route::get('/historias/mas', [HistoriaController::class, 'mas'])->name('historias.mas');
+Route::get('/historias/enviar', [HistoriaController::class, 'showForm'])->name('historias.enviar');
+Route::post('/historias', [HistoriaController::class, 'store'])->name('historias.store');
 
 // ===============================
 // RUTAS PARA PSICÓLOGO
@@ -100,7 +105,8 @@ Route::middleware(['auth.usuario'])->group(function () {
     Route::post('/reporte', [ReporteController::class, 'store'])->name('reporte.store');
     Route::get('/chat', fn() => view('chat'))->name('chat');
     Route::get('/recursos', fn() => view('resources'))->name('resources');
-    Route::get('/historias', fn() => view('historias'))->name('historias');
+    // Nota: La ruta /historias está registrada fuera de este grupo y
+    // apunta a HistoriaController@index para mostrar historias públicas.
 });
 
 

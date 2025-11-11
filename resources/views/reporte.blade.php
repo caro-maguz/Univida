@@ -183,7 +183,7 @@
     <article class="container">
       <!-- Mascota -->
       <section class="image-section" aria-hidden="true">
-        <img src="{{ asset('img/mascotainicio.png') }}" alt="Mascota Univida animada">
+        <img src="{{ asset('img/img2.png') }}" alt="Mascota Univida animada">
       </section>
 
       <!-- Formulario -->
@@ -217,10 +217,9 @@
           <label for="fecha">Fecha</label>
           <input type="date" id="fecha" name="fecha" required>
 
-          <div class="checkbox-container">
-            <input type="checkbox" id="anonimo" name="anonimo" value="1">
-            <label for="anonimo">Reporte anónimo</label>
-          </div>
+          <!-- El checkbox de anonimato se elimina: todos los reportes se envían como anónimos.
+               Se incluye un campo hidden por claridad en la petición. -->
+          <input type="hidden" name="anonimo" value="1">
 
           <button type="submit">Enviar Reporte</button>
         </form>

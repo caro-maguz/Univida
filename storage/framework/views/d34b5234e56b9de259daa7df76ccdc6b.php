@@ -210,16 +210,13 @@
      <div class="dropdown-menu" id="dropdownMenu">
       <a href="#">Mi Perfil</a>
       <a href="#">Configuración</a>
-
-  <!-- Botón de cerrar sesión -->
-      <form action="<?php echo e(route('logout.psicologo')); ?>" method="POST">
-    <?php echo csrf_field(); ?>
-    <button type="submit" class="text-left w-full border-none bg-white p-2 cursor-pointer hover:bg-red-50 hover:text-red-700">
-        Cerrar sesión
-    </button>
-</form>
-
-</div>
+      <form action="<?php echo e(route('logout.psicologo')); ?>" method="POST" style="margin:0;">
+        <?php echo csrf_field(); ?>
+        <button type="submit" style="width:100%; text-align:left; padding:12px; background:none; border:none; cursor:pointer; font-family:'Delius', cursive; font-size:0.95rem; color:#333;">
+          Cerrar sesión
+        </button>
+      </form>
+    </div>
 
 
   </header>

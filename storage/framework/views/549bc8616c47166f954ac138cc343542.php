@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
   <title>Chat de Apoyo - Univida</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
@@ -238,45 +238,45 @@
 </head>
 <body>
   <header>
-    <a href="{{ route('inicio.usuario') }}">Regresar</a>
+    <a href="<?php echo e(route('inicio.usuario')); ?>">Regresar</a>
   </header>
 
   <main>
     <article class="chat-container">
       <section class="mascota">
-        <img src="{{ asset('img/img5.png') }}" alt="Mascota Univida sonriente">
+        <img src="<?php echo e(asset('img/img5.png')); ?>" alt="Mascota Univida sonriente">
       </section>
 
       <section class="chat-section">
         <h2 class="chat-header">Estamos contigo 💙 Tu bienestar importa</h2>
         
-        <div class="estado-chat {{ $chat->estado === 'activo' ? 'estado-activo' : 'estado-en-espera' }}">
-          @if($chat->estado === 'en_espera')
+        <div class="estado-chat <?php echo e($chat->estado === 'activo' ? 'estado-activo' : 'estado-en-espera'); ?>">
+          <?php if($chat->estado === 'en_espera'): ?>
             ⏳ Esperando a que un profesional se una...
-          @elseif($chat->estado === 'activo')
+          <?php elseif($chat->estado === 'activo'): ?>
             ✅ Conectado con un profesional
-          @endif
+          <?php endif; ?>
         </div>
         
         <div class="messages" id="messages-container" aria-live="polite">
-          @foreach($mensajes as $mensaje)
-            @php
+          <?php $__currentLoopData = $mensajes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mensaje): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php
               $isSystemConnection = $mensaje->tipo_remitente === 'sistema' && (str_contains($mensaje->mensaje,'se ha unido') || str_contains($mensaje->mensaje,'ha iniciado'));
-            @endphp
-            @if($isSystemConnection)
-              <div class="system-line" data-mensaje-id="{{ $mensaje->id }}">{{ $mensaje->mensaje }} · <small>{{ $mensaje->created_at->format('H:i') }}</small></div>
-            @else
-              <div class="message {{ $mensaje->tipo_remitente === 'sistema' ? 'psicologo' : $mensaje->tipo_remitente }}" data-mensaje-id="{{ $mensaje->id }}">
-                <span>{{ $mensaje->mensaje }}</span>
-                <div class="message-time">{{ $mensaje->created_at->format('H:i') }}</div>
+            ?>
+            <?php if($isSystemConnection): ?>
+              <div class="system-line" data-mensaje-id="<?php echo e($mensaje->id); ?>"><?php echo e($mensaje->mensaje); ?> · <small><?php echo e($mensaje->created_at->format('H:i')); ?></small></div>
+            <?php else: ?>
+              <div class="message <?php echo e($mensaje->tipo_remitente === 'sistema' ? 'psicologo' : $mensaje->tipo_remitente); ?>" data-mensaje-id="<?php echo e($mensaje->id); ?>">
+                <span><?php echo e($mensaje->mensaje); ?></span>
+                <div class="message-time"><?php echo e($mensaje->created_at->format('H:i')); ?></div>
               </div>
-            @endif
-          @endforeach
+            <?php endif; ?>
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
 
         <form class="chat-input" id="chat-form">
-          @csrf
-          <input type="hidden" name="chat_id" value="{{ $chat->id }}">
+          <?php echo csrf_field(); ?>
+          <input type="hidden" name="chat_id" value="<?php echo e($chat->id); ?>">
           <input type="text" id="mensaje-input" name="mensaje" placeholder="Escribe tu mensaje..." required maxlength="1000">
           <button type="submit" id="enviar-btn">Enviar</button>
         </form>
@@ -289,8 +289,8 @@
   </main>
 
   <script>
-    const chatId = {{ $chat->id }};
-    let ultimoMensajeId = {{ $mensajes->last()->id ?? 0 }};
+    const chatId = <?php echo e($chat->id); ?>;
+    let ultimoMensajeId = <?php echo e($mensajes->last()->id ?? 0); ?>;
     let polling;
 
     // Configurar CSRF token para todas las peticiones AJAX
@@ -315,7 +315,7 @@
       btn.disabled = true;
       
       try {
-        const response = await fetch('{{ route("chat.enviar") }}', {
+        const response = await fetch('<?php echo e(route("chat.enviar")); ?>', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -373,7 +373,7 @@
     // Polling para nuevos mensajes
     async function verificarNuevosMensajes() {
       try {
-        const response = await fetch(`{{ route("chat.nuevos") }}?chat_id=${chatId}&ultimo_mensaje_id=${ultimoMensajeId}`);
+        const response = await fetch(`<?php echo e(route("chat.nuevos")); ?>?chat_id=${chatId}&ultimo_mensaje_id=${ultimoMensajeId}`);
         const data = await response.json();
         
         if (data.mensajes && data.mensajes.length > 0) {
@@ -394,7 +394,7 @@
       }
       
       try {
-        const response = await fetch('{{ route("chat.finalizar") }}', {
+        const response = await fetch('<?php echo e(route("chat.finalizar")); ?>', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -410,7 +410,7 @@
         if (data.success) {
           clearInterval(polling);
           alert('Chat finalizado. Gracias por usar nuestro servicio.');
-          window.location.href = '{{ route("inicio.usuario") }}';
+          window.location.href = '<?php echo e(route("inicio.usuario")); ?>';
         }
       } catch (error) {
         console.error('Error al finalizar chat:', error);
@@ -425,4 +425,4 @@
     scrollToBottom();
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\univida\resources\views/chat.blade.php ENDPATH**/ ?>

@@ -109,21 +109,25 @@
       background: #e3f2fd;
       align-self: flex-start;
       border: 2px solid #90caf9;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
     }
 
     .message.psicologo {
       background: #004aad;
       color: white;
       align-self: flex-end;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
 
-    .message.sistema {
-      background: #fff3cd;
-      color: #856404;
+    /* Mensajes de sistema especiales (solo línea, sin burbuja) */
+    .system-line {
       align-self: center;
+      font-size: 0.85rem;
+      color: #555;
+      background: none;
+      padding: 2px 8px;
+      border-radius: 0;
       text-align: center;
-      max-width: 85%;
-      border: 1px solid #ffc107;
     }
 
     .message-time {
@@ -229,10 +233,17 @@
 
       <div class="messages" id="messages-container">
         <?php $__currentLoopData = $chat->mensajes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mensaje): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-          <div class="message <?php echo e($mensaje->tipo_remitente); ?>" data-mensaje-id="<?php echo e($mensaje->id); ?>">
-            <div><?php echo e($mensaje->mensaje); ?></div>
-            <div class="message-time"><?php echo e($mensaje->created_at->format('H:i')); ?></div>
-          </div>
+          <?php
+            $isSystemConnection = $mensaje->tipo_remitente === 'sistema' && (str_contains($mensaje->mensaje,'se ha unido') || str_contains($mensaje->mensaje,'ha iniciado'));
+          ?>
+          <?php if($isSystemConnection): ?>
+            <div class="system-line" data-mensaje-id="<?php echo e($mensaje->id); ?>"><?php echo e($mensaje->mensaje); ?> · <small><?php echo e($mensaje->created_at->format('H:i')); ?></small></div>
+          <?php else: ?>
+            <div class="message <?php echo e($mensaje->tipo_remitente); ?>" data-mensaje-id="<?php echo e($mensaje->id); ?>">
+              <div><?php echo e($mensaje->mensaje); ?></div>
+              <div class="message-time"><?php echo e($mensaje->created_at->format('H:i')); ?></div>
+            </div>
+          <?php endif; ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>
 
@@ -319,13 +330,24 @@
 
     function agregarMensaje(mensaje) {
       const container = document.getElementById('messages-container');
-      const div = document.createElement('div');
-      div.className = `message ${mensaje.tipo_remitente}`;
-      div.setAttribute('data-mensaje-id', mensaje.id);
-      div.innerHTML = `
-        <div>${mensaje.mensaje}</div>
-        <div class="message-time">${mensaje.created_at}</div>
-      `;
+
+      // Detectar mensajes de sistema de conexión
+      const isSystemConnection = mensaje.tipo_remitente === 'sistema' && (mensaje.mensaje.includes('se ha unido') || mensaje.mensaje.includes('ha iniciado'));
+
+      let div = document.createElement('div');
+      if (isSystemConnection) {
+        div.className = 'system-line';
+        div.setAttribute('data-mensaje-id', mensaje.id);
+        div.textContent = `${mensaje.mensaje} · ${mensaje.created_at}`;
+      } else {
+        div.className = `message ${mensaje.tipo_remitente}`;
+        div.setAttribute('data-mensaje-id', mensaje.id);
+        div.innerHTML = `
+          <div>${mensaje.mensaje}</div>
+          <div class="message-time">${mensaje.created_at}</div>
+        `;
+      }
+
       container.appendChild(div);
       ultimoMensajeId = mensaje.id;
     }

@@ -190,7 +190,7 @@
     <article class="container">
       <!-- Mascota -->
       <section class="image-section" aria-hidden="true">
-        <img src="{{ asset('img/mascotainicio.png') }}" alt="Mascota Univida animada">
+        <img src="{{ asset('img/img2.png') }}" alt="Mascota Univida animada">
       </section>
 
       <!-- Formulario -->
@@ -198,22 +198,30 @@
         <h2 id="titulo-formulario">Enviar Historia Anónima</h2>
         <p>Escribe tu historia aquí. Tu identidad será protegida.</p>
 
-        <form action="#" method="post" onsubmit="event.preventDefault(); mostrarExito();">
-          <label for="historia">Tu historia</label>
-          <textarea id="historia" name="historia" placeholder="Escribe aquí tu historia..." required></textarea>
+        @if(session('success'))
+          <div class="success-message" style="display:block">{{ session('success') }}</div>
+        @endif
 
-          <div class="checkbox-container">
-            <input type="checkbox" id="anonimo" name="anonimo" checked>
-            <label for="anonimo">Enviar de forma anónima</label>
+        @if($errors->any())
+          <div style="background:#ffebee;padding:12px;border-radius:10px;margin-bottom:12px;color:#c62828;border:1px solid #ffcdd2;">
+            <ul style="margin:0;padding-left:18px;">
+              @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
           </div>
+        @endif
+
+        <form action="{{ route('historias.store') }}" method="POST">
+          @csrf
+          <label for="historia">Tu historia</label>
+          <textarea id="historia" name="historia" placeholder="Escribe aquí tu historia..." required>{{ old('historia') }}</textarea>
+
+          {{-- El envío siempre será anónimo en el backend; enviamos hidden por claridad --}}
+          <input type="hidden" name="anonimo" value="1">
 
           <button type="submit">Enviar Historia</button>
         </form>
-
-        <!-- Mensaje de éxito -->
-        <div id="successMessage" class="success-message">
-          Mensaje anónimo enviado exitosamente 💙
-        </div>
       </section>
     </article>
   </main>

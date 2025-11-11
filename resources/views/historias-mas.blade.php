@@ -170,10 +170,21 @@
         <p>Estas son historias reales que nos ayudan a entender y prevenir.</p>
 
         <div class="history-list">
-          <p><strong>Historia 1:</strong> Texto de la historia 1</p>
-          <p><strong>Historia 2:</strong> Texto de la historia 2</p>
-          <p><strong>Historia 3:</strong> Texto de la historia 3</p>
-          <p><strong>Historia 4:</strong> Texto de la historia 4</p>
+          @if(isset($historias) && $historias->count() > 0)
+            @foreach($historias as $h)
+              <div style="margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed #e6eef8;">
+                <p style="margin:0;"><strong>Historia</strong> · <small style="color:#54718a">{{ $h->created_at ? $h->created_at->format('d/m/Y') : '' }}</small></p>
+                <p style="margin:6px 0 0;">{!! nl2br(e(\Illuminate\Support\Str::limit($h->contenido, 800))) !!}</p>
+              </div>
+            @endforeach
+
+            {{-- Paginación --}}
+            <div style="margin-top:16px; display:flex; justify-content:center;">
+              {{ $historias->links() }}
+            </div>
+          @else
+            <p>No hay historias publicadas aún.</p>
+          @endif
         </div>
 
       </section>
