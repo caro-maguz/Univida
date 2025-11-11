@@ -136,7 +136,7 @@
   .hero-text {
     position: absolute;
     bottom: 50px;
-    left: 50px;
+    left: 5px;
     max-width: 400px;
     padding: 25px 30px;
     background: rgba(255, 255, 255, 0.3);
@@ -210,7 +210,7 @@
     color: #ffffffff;
     text-align: center;
     padding: 16px;
-    margin-top: 40px;
+    margin-top: 100px;
     box-shadow: 0 -3px 10px rgba(0,0,0,0.05);
   }
 
@@ -273,30 +273,6 @@
     </div>
   </section>
 
-  <!-- Info Cards -->
-  <section class="info-cards">
-    <div class="card">
-      <a href="{{ route('about') }}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
-        <div class="card-icon">❓</div>
-        <h3>¿Qué es Univida?</h3>
-        <p>Conoce la misión y visión de nuestro proyecto.</p>
-      </a>
-    </div>
-    <div class="card">
-      <a href="{{ route('services') }}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
-        <div class="card-icon">🤝</div>
-        <h3>Cómo te podemos ayudar</h3>
-        <p>Descubre nuestros servicios de apoyo y prevención.</p>
-      </a>
-    </div>
-    <div class="card">
-      <a href="{{ route('resources') }}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
-        <div class="card-icon">📚</div>
-        <h3>Recursos disponibles</h3>
-        <p>Accede a protocolos, guías y contactos de emergencia.</p>
-      </a>
-    </div>
-  </section>
 
   <footer>
     <p>&copy; 2025 Univida. Todos los derechos reservados.</p>

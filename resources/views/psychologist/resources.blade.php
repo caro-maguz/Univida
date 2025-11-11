@@ -344,186 +344,56 @@
     </div>
 
     <div class="resources-grid" id="resourcesGrid">
-      <!-- Se llenará con JavaScript -->
+      @forelse($recursos as $recurso)
+        @php
+          $nombreTipo = strtolower($recurso->tipoRecurso->nombre ?? '');
+          $icon = 'fas fa-file';
+          if(str_contains($nombreTipo,'emerg')) $icon='fas fa-bolt';
+          elseif(str_contains($nombreTipo,'prev')) $icon='fas fa-shield-alt';
+          elseif(str_contains($nombreTipo,'acom') || str_contains($nombreTipo,'apoyo')) $icon='fas fa-hand-holding-heart';
+        @endphp
+        <div class="resource-card">
+          <div class="resource-icon">
+            <i class="{{ $icon }}"></i>
+          </div>
+          <h3 class="resource-title">{{ $recurso->titulo }}</h3>
+          <p class="resource-desc">{{ $recurso->descripcion }}</p>
+          <div class="resource-meta">
+            <span>{{ $recurso->enlace ? 'Enlace' : 'Recurso' }}</span>
+            <span class="category-tag">{{ $recurso->tipoRecurso->nombre ?? '—' }}</span>
+          </div>
+          @if($recurso->enlace)
+            <div style="margin-top:10px">
+              <a href="{{ $recurso->enlace }}" target="_blank" rel="noopener" class="back-btn">Abrir</a>
+            </div>
+          @endif
+        </div>
+      @empty
+        <p style="grid-column:1/-1; text-align:center; color:#7f8c8d;">No hay recursos cargados.</p>
+      @endforelse
     </div>
   </div>
 
-  <!-- Modal para subir recurso -->
-  <div class="modal" id="uploadModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Subir nuevo recurso</h3>
-        <button class="close-modal" onclick="closeUploadModal()">&times;</button>
-      </div>
-      <form id="uploadForm">
-        <div class="form-group">
-          <label for="title">Título del recurso</label>
-          <input type="text" id="title" required placeholder="Ej. Protocolo de crisis suicida">
-        </div>
-        <div class="form-group">
-          <label for="category">Categoría</label>
-          <select id="category" required>
-            <option value="emergencias">Emergencias</option>
-            <option value="prevencion">Prevención</option>
-            <option value="acompanamiento">Acompañamiento</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="description">Descripción</label>
-          <textarea id="description" placeholder="Breve descripción del contenido..."></textarea>
-        </div>
-        <div class="form-group">
-          <label for="file">Archivo (PDF, DOC, etc.)</label>
-          <input type="file" id="file" accept=".pdf,.doc,.docx,.txt">
-          <small style="color:#7f8c8d; display:block; margin-top:6px;">Solo para simulación. En producción se integraría con backend.</small>
-        </div>
-        <button type="submit" class="submit-btn">Guardar recurso</button>
-      </form>
-    </div>
-  </div>
+  <!-- Nota: la carga de recursos la gestiona el administrador -->
 
   <script>
-    // Recursos iniciales (biblioteca base)
-    let recursos = [
-      {
-        id: 1,
-        titulo: "Protocolo de intervención en crisis suicida",
-        descripcion: "Guía paso a paso para evaluación y manejo inmediato.",
-        categoria: "emergencias",
-        fecha: "2024-01-15",
-        tipo: "PDF"
-      },
-      {
-        id: 2,
-        titulo: "Técnicas de respiración para ansiedad",
-        descripcion: "Ejercicios prácticos para pacientes con trastornos de ansiedad.",
-        categoria: "prevencion",
-        fecha: "2024-02-10",
-        tipo: "PDF"
-      },
-      {
-        id: 3,
-        titulo: "Guía de acompañamiento en duelo",
-        descripcion: "Estrategias terapéuticas para procesos de duelo complicado.",
-        categoria: "acompanamiento",
-        fecha: "2024-03-05",
-        tipo: "PDF"
-      },
-      {
-        id: 4,
-        titulo: "Lista de verificación: Riesgo autolesivo",
-        descripcion: "Instrumento clínico para evaluación rápida de riesgo.",
-        categoria: "emergencias",
-        fecha: "2024-04-20",
-        tipo: "PDF"
-      },
-      {
-        id: 5,
-        titulo: "Taller: Resiliencia en adolescentes",
-        descripcion: "Material didáctico para talleres grupales.",
-        categoria: "prevencion",
-        fecha: "2024-03-22",
-        tipo: "DOCX"
-      }
-    ];
-
-    let recursosFiltrados = [...recursos];
-
-    // Renderizar recursos
-    function renderRecursos(data) {
-      const container = document.getElementById('resourcesGrid');
-      container.innerHTML = '';
-
-      if (data.length === 0) {
-        container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#7f8c8d;">No hay recursos en esta categoría.</p>`;
-        return;
-      }
-
-      data.forEach(recurso => {
-        const card = document.createElement('div');
-        card.className = 'resource-card';
-        const iconMap = {
-          emergencias: 'fas fa-bolt',
-          prevencion: 'fas fa-shield-alt',
-          acompanamiento: 'fas fa-hand-holding-heart'
-        };
-        const icon = iconMap[recurso.categoria] || 'fas fa-file';
-        const categoryName = {
-          emergencias: 'Emergencias',
-          prevencion: 'Prevención',
-          acompanamiento: 'Acompañamiento'
-        };
-
-        card.innerHTML = `
-          <div class="resource-icon">
-            <i class="${icon}"></i>
-          </div>
-          <h3 class="resource-title">${recurso.titulo}</h3>
-          <p class="resource-desc">${recurso.descripcion}</p>
-          <div class="resource-meta">
-            <span>${recurso.tipo}</span>
-            <span class="category-tag">${categoryName[recurso.categoria]}</span>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Filtros por categoría
+    // Opcional: podríamos implementar filtros de categorías en frontend leyendo los nombres de tipo.
     document.querySelectorAll('.category-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        const cards = document.querySelectorAll('.resource-card');
         const cat = btn.dataset.category;
-        if (cat === 'todos') {
-          recursosFiltrados = [...recursos];
-        } else {
-          recursosFiltrados = recursos.filter(r => r.categoria === cat);
-        }
-        renderRecursos(recursosFiltrados);
+        cards.forEach(card => {
+          if (cat === 'todos') { card.style.display = ''; return; }
+          const label = card.querySelector('.category-tag')?.textContent.toLowerCase() || '';
+          const matches = (cat === 'emergencias' && label.includes('emerg')) ||
+                         (cat === 'prevencion' && label.includes('prev')) ||
+                         (cat === 'acompanamiento' && (label.includes('acom') || label.includes('apoyo')));
+          card.style.display = matches ? '' : 'none';
+        });
       });
     });
-
-    // Modal de subida
-    function openUploadModal() {
-      document.getElementById('uploadModal').style.display = 'flex';
-    }
-
-    function closeUploadModal() {
-      document.getElementById('uploadModal').style.display = 'none';
-    }
-
-    document.getElementById('uploadForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const titulo = document.getElementById('title').value;
-      const categoria = document.getElementById('category').value;
-      const descripcion = document.getElementById('description').value || "Sin descripción";
-      
-      const nuevoRecurso = {
-        id: recursos.length + 1,
-        titulo,
-        descripcion,
-        categoria,
-        fecha: new Date().toISOString().split('T')[0],
-        tipo: "PDF"
-      };
-      
-      recursos.push(nuevoRecurso);
-      recursosFiltrados = [...recursos];
-      
-      renderRecursos(recursosFiltrados);
-      closeUploadModal();
-      this.reset();
-      alert("✅ Recurso agregado a tu biblioteca.");
-    });
-
-    window.onclick = (e) => {
-      if (e.target === document.getElementById('uploadModal')) closeUploadModal();
-    };
-
-    // Inicializar
-    renderRecursos(recursos);
   </script>
 </body>
 </html>

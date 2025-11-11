@@ -18,7 +18,8 @@ use App\Http\Controllers\HistoriaController;
 Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('/rol', fn() => view('rol'))->name('rol');
 Route::get('/acerca', fn() => view('about'))->name('about');
-Route::get('/recursos', fn() => view('resources'))->name('resources');
+// Centro de recursos (controlador para cargar categorías desde BD)
+Route::get('/recursos', [RecursoController::class, 'centro'])->name('resources');
 Route::get('/servicios', fn() => view('services'))->name('services');
 Route::get('/chat', fn() => view('chat'))->name('chat');
 // (El formulario de reporte es servido dentro de las rutas protegidas de usuario)
@@ -91,7 +92,18 @@ Route::prefix('administrador')->group(function () {
     Route::get('/editar/{id}', [AdminController::class, 'edit'])->name('administrador.edit');
     Route::put('/actualizar/{id}', [AdminController::class, 'update'])->name('administrador.update');
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('administrador.destroy');
+
+    // CRUD de recursos
+    Route::get('/recursos', [RecursoController::class, 'adminIndex'])->name('administrador.recursos.index');
+    Route::get('/recursos/crear', [RecursoController::class, 'create'])->name('administrador.recursos.create');
+    Route::post('/recursos', [RecursoController::class, 'store'])->name('administrador.recursos.store');
+    Route::get('/recursos/{id}/editar', [RecursoController::class, 'edit'])->name('administrador.recursos.edit');
+    Route::put('/recursos/{id}', [RecursoController::class, 'update'])->name('administrador.recursos.update');
+    Route::delete('/recursos/{id}', [RecursoController::class, 'destroy'])->name('administrador.recursos.destroy');
 });
+
+// Ruta pública para descargar recursos
+Route::get('/recursos/descargar/{id}', [RecursoController::class, 'download'])->name('recursos.download');
 
 // ===============================
 // RUTAS PROTEGIDAS PARA USUARIO
@@ -104,7 +116,7 @@ Route::middleware(['auth.usuario'])->group(function () {
     })->name('reporte');
     Route::post('/reporte', [ReporteController::class, 'store'])->name('reporte.store');
     Route::get('/chat', fn() => view('chat'))->name('chat');
-    Route::get('/recursos', fn() => view('resources'))->name('resources');
+    Route::get('/recursos', [RecursoController::class, 'centro'])->name('resources');
     // Nota: La ruta /historias está registrada fuera de este grupo y
     // apunta a HistoriaController@index para mostrar historias públicas.
 });

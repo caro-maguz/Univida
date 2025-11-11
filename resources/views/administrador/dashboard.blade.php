@@ -42,6 +42,9 @@
       <button onclick="showSection('crud')" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg">
         <i class="fas fa-user-cog mr-2"></i> Psicólogos
       </button>
+      <a href="{{ route('administrador.recursos.index') }}" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg">
+        <i class="fas fa-book mr-2"></i> Recursos
+      </a>
     </nav>
     <div class="absolute bottom-0 w-full p-4 border-t border-blue-400">
     <form action="{{ route('logout.admin') }}" method="POST">

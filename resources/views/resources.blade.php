@@ -139,14 +139,14 @@
 <body>
 
   <header>
-    <a href="index.php">Regresar al Inicio</a>
+    <a href="{{ route('inicio.usuario') }}">Regresar</a>
   </header>
 
   <main>
     <article class="card">
       <!-- Imagen del búho -->
       <div class="mascotainicio">
-        <img src="img/mascotainicio.png" alt="mascotainicio Univida">
+        <img src="img/img1.png" alt="mascotainicio Univida">
       </div>
 
       <!-- Contenido de texto -->

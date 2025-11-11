@@ -142,7 +142,6 @@
     <!-- Enlaces extra -->
     <div class="extra-links">
       <p><a href="{{ route('login.user') }}">¿Ya tienes cuenta? Inicia sesión</a></p>
-      <p><a href="{{ route('rol') }}">← Regresar</a></p>
     </div>
   </div>
 

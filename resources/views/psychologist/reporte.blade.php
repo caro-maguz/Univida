@@ -475,18 +475,19 @@
           <div id="caseHistory"></div>
         </div>
 
+
         <div class="actions">
           <h3>Acciones rápidas</h3>
           <div class="action-buttons">
-            <button class="btn-action btn-cita">
+            <!--<button class="btn-action btn-cita">
               <i class="fas fa-calendar-check"></i> Asignar cita
-            </button>
+            </button>-->
             <button class="btn-action btn-mensaje">
               <i class="fas fa-comment-dots"></i> Enviar mensaje
             </button>
-            <button class="btn-action btn-resuelto">
+             <!--<button class="btn-action btn-resuelto">
               <i class="fas fa-check"></i> Marcar como resuelto
-            </button>
+            </button>-->
           </div>
         </div>
       </div>
