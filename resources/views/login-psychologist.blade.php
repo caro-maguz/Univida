@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Univida - Iniciar Sesión Psicólogo</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     * {

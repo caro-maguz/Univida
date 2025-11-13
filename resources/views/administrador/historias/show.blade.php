@@ -1,154 +1,133 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Detalle de Historia</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
+        *{font-family:'Delius',cursive;}
+        body{background:#f5f8fb;margin:0;padding:30px;}
+        h1{color:#004aad;margin-bottom:10px;}
+        .back{display:inline-flex;align-items:center;gap:8px;color:#004aad;text-decoration:none;font-weight:600;margin-bottom:14px;}
+        .card{background:#fff;border-radius:18px;max-width:900px;margin:0 auto;box-shadow:0 4px 14px rgba(0,0,0,.08);overflow:hidden;}
+        .card-header{background:#004aad;color:#fff;padding:14px 18px;}
+        .card-body{padding:18px;}
+        .badge{display:inline-block;padding:6px 12px;border-radius:12px;font-size:12px;font-weight:700;}
+        .warn{background:#fff7cc;color:#8a6d00;}
+        .ok{background:#dcfce7;color:#14532d;}
+        .err{background:#ffe2e2;color:#7f1d1d;}
+        .section{margin-bottom:16px;}
+        .content-box{background:#f7fbff;border:1px solid #e3f2fd;border-radius:12px;padding:12px;white-space:pre-wrap;}
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+        .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;}
+        button,a.button{background:#004aad;color:#fff;padding:10px 16px;border:none;border-radius:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;}
+        .approve{background:#16a34a;}
+        .reject{background:#d32f2f;}
+        .edit{background:#f59e0b;}
+        .delete{background:#ef4444;}
+        .muted{color:#6b7280}
+    </style>
+</head>
+<body>
+    <a href="{{ route('administrador.historias.index') }}" class="back"><i class="fas fa-arrow-left"></i> Volver</a>
+    <h1>📖 Historia #{{ $historia->id }}</h1>
 
-@section('title', 'Detalle de Historia')
-
-@section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="mb-3">
-                <a href="{{ route('administrador.historias.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Volver
-                </a>
+    <div class="card">
+        <div class="card-header">Detalle</div>
+        <div class="card-body">
+            <div class="section">
+                <strong>Estado: </strong>
+                @if($historia->estado === 'pendiente')
+                    <span class="badge warn">Pendiente de moderación</span>
+                @elseif($historia->estado === 'aprobada')
+                    <span class="badge ok">Aprobada</span>
+                @else
+                    <span class="badge err">Rechazada</span>
+                @endif
             </div>
 
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">📖 Historia #{{ $historia->id }}</h4>
-                </div>
-                <div class="card-body">
-                    <!-- Estado -->
-                    <div class="mb-4">
-                        <h6 class="text-muted">Estado:</h6>
-                        @if($historia->estado === 'pendiente')
-                            <span class="badge bg-warning text-dark fs-6">
-                                <i class="fas fa-clock"></i> Pendiente de moderación
-                            </span>
-                        @elseif($historia->estado === 'aprobada')
-                            <span class="badge bg-success fs-6">
-                                <i class="fas fa-check"></i> Aprobada
-                            </span>
+            <div class="section">
+                <strong>Contenido:</strong>
+                <div class="content-box">{{ $historia->contenido }}</div>
+            </div>
+
+            <div class="grid section">
+                <div>
+                    <div class="muted">Usuario</div>
+                    <div>
+                        @if($historia->usuario)
+                            {{ $historia->usuario->nombre ?? 'Anónimo' }}
                         @else
-                            <span class="badge bg-danger fs-6">
-                                <i class="fas fa-times"></i> Rechazada
-                            </span>
+                            <span class="muted">Sin usuario registrado</span>
                         @endif
-                    </div>
-
-                    <!-- Contenido -->
-                    <div class="mb-4">
-                        <h6 class="text-muted">Contenido:</h6>
-                        <div class="p-3 bg-light rounded border">
-                            <p class="mb-0" style="white-space: pre-wrap;">{{ $historia->contenido }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Información del usuario -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Usuario:</h6>
-                            <p>
-                                @if($historia->usuario)
-                                    {{ $historia->usuario->nombre ?? 'Anónimo' }}
-                                @else
-                                    <span class="text-muted">Sin usuario registrado</span>
-                                @endif
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Fecha de envío:</h6>
-                            <p>{{ $historia->created_at->format('d/m/Y H:i:s') }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Información de moderación -->
-                    @if($historia->moderador)
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <h6 class="text-muted">Moderador:</h6>
-                                <p>{{ $historia->moderador->nombre }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 class="text-muted">Fecha de moderación:</h6>
-                                <p>{{ $historia->fecha_moderacion ? \Carbon\Carbon::parse($historia->fecha_moderacion)->format('d/m/Y H:i:s') : '-' }}</p>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Motivo de rechazo -->
-                    @if($historia->estado === 'rechazada' && $historia->motivo_rechazo)
-                        <div class="alert alert-danger">
-                            <h6 class="alert-heading">Motivo del rechazo:</h6>
-                            <p class="mb-0">{{ $historia->motivo_rechazo }}</p>
-                        </div>
-                    @endif
-
-                    <!-- Acciones -->
-                    <hr>
-                    <div class="d-flex gap-2 justify-content-end">
-                        @if($historia->estado === 'pendiente')
-                            <form action="{{ route('administrador.historias.aprobar', $historia->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-check"></i> Aprobar
-                                </button>
-                            </form>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rechazarModal">
-                                <i class="fas fa-times"></i> Rechazar
-                            </button>
-                        @endif
-
-                        <a href="{{ route('administrador.historias.edit', $historia->id) }}" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-
-                        <form action="{{ route('administrador.historias.destroy', $historia->id) }}" 
-                              method="POST"
-                              onsubmit="return confirm('¿Estás seguro de eliminar esta historia?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                        </form>
                     </div>
                 </div>
+                <div>
+                    <div class="muted">Fecha de envío</div>
+                    <div>{{ $historia->created_at->format('d/m/Y H:i:s') }}</div>
+                </div>
+            </div>
+
+            @if($historia->moderador)
+                <div class="grid section">
+                    <div>
+                        <div class="muted">Moderador</div>
+                        <div>{{ $historia->moderador->nombre }}</div>
+                    </div>
+                    <div>
+                        <div class="muted">Fecha de moderación</div>
+                        <div>{{ $historia->fecha_moderacion ? \Carbon\Carbon::parse($historia->fecha_moderacion)->format('d/m/Y H:i:s') : '-' }}</div>
+                    </div>
+                </div>
+            @endif
+
+            @if($historia->estado === 'rechazada' && $historia->motivo_rechazo)
+                <div class="section" style="background:#ffe2e2;color:#7f1d1d;border:1px solid #fecaca;padding:12px;border-radius:12px;">
+                    <strong>Motivo del rechazo:</strong>
+                    <div>{{ $historia->motivo_rechazo }}</div>
+                </div>
+            @endif
+
+            <hr style="border:none;border-top:1px solid #eee;margin:14px 0;">
+            <div class="actions">
+                @if($historia->estado === 'pendiente')
+                    <form action="{{ route('administrador.historias.aprobar', $historia->id) }}" method="POST" style="display:inline">
+                        @csrf
+                        <button type="submit" class="approve"><i class="fas fa-check"></i> Aprobar</button>
+                    </form>
+                    <form id="rechazar-actual" action="{{ route('administrador.historias.rechazar', $historia->id) }}" method="POST" style="display:inline">
+                        @csrf
+                        <input type="hidden" name="motivo_rechazo" value="" />
+                        <button type="button" class="reject" onclick="rechazarActual()"><i class="fas fa-times"></i> Rechazar</button>
+                    </form>
+                @endif
+
+                <a href="{{ route('administrador.historias.edit', $historia->id) }}" class="edit"><i class="fas fa-edit"></i> Editar</a>
+                <form action="{{ route('administrador.historias.destroy', $historia->id) }}" method="POST" style="display:inline" onsubmit="return confirm('¿Estás seguro de eliminar esta historia?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="delete"><i class="fas fa-trash"></i> Eliminar</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal para rechazar -->
-<div class="modal fade" id="rechazarModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('administrador.historias.rechazar', $historia->id) }}" method="POST">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Rechazar Historia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="motivo_rechazo" class="form-label">
-                            Motivo del rechazo <span class="text-danger">*</span>
-                        </label>
-                        <textarea name="motivo_rechazo" 
-                                  id="motivo_rechazo" 
-                                  class="form-control" 
-                                  rows="4" 
-                                  required
-                                  placeholder="Explica por qué se rechaza esta historia..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-times"></i> Rechazar Historia
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endsection
+    <script>
+        function rechazarActual(){
+            const preview = `{{ \Illuminate\Support\Str::limit(addslashes($historia->contenido), 80) }}`;
+            const motivo = prompt('Motivo del rechazo para la historia:\n\n' + preview + '\n\nEscribe el motivo (mínimo 10 caracteres):');
+            if(motivo === null){ return; }
+            if(!motivo || motivo.trim().length < 10){
+                alert('Debes escribir un motivo válido (mínimo 10 caracteres).');
+                return;
+            }
+            const form = document.getElementById('rechazar-actual');
+            form.querySelector('input[name="motivo_rechazo"]').value = motivo.trim();
+            form.submit();
+        }
+    </script>
+</body>
+</html>

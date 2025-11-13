@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
-    // ============================================
+    
     // VISTA DEL USUARIO
-    // ============================================
+    
     
     public function mostrarChat()
     {
@@ -53,9 +53,9 @@ class ChatController extends Controller
         return view('chat', compact('chat', 'mensajes'));
     }
 
-    // ============================================
+
     // ENVIAR MENSAJE DEL USUARIO
-    // ============================================
+   
     
     public function enviarMensaje(Request $request)
     {
@@ -95,9 +95,8 @@ class ChatController extends Controller
         ]);
     }
 
-    // ============================================
     // OBTENER NUEVOS MENSAJES (POLLING)
-    // ============================================
+  
     
     public function obtenerNuevosMensajes(Request $request)
     {
@@ -121,9 +120,9 @@ class ChatController extends Controller
         ]);
     }
 
-    // ============================================
+
     // FINALIZAR CHAT (USUARIO)
-    // ============================================
+
     
     public function finalizarChat(Request $request)
     {
@@ -147,9 +146,9 @@ class ChatController extends Controller
         return response()->json(['error' => 'Chat no encontrado'], 404);
     }
 
-    // ============================================
+
     // VISTA DEL PSICÓLOGO
-    // ============================================
+   
     
     public function index()
     {
@@ -183,9 +182,8 @@ class ChatController extends Controller
         return view('psychologist.chat', compact('chatsEnEspera', 'chatsActivos', 'chatsFinalizados'));
     }
 
-    // ============================================
     // VER CHAT ESPECÍFICO (PSICÓLOGO)
-    // ============================================
+  
     
     public function verChat($chatId)
     {
@@ -198,9 +196,9 @@ class ChatController extends Controller
         return view('psychologist.chat-detalle', compact('chat'));
     }
 
-    // ============================================
+  
     // TOMAR CHAT (PSICÓLOGO)
-    // ============================================
+
     
     public function tomarChat(Request $request)
     {
@@ -231,9 +229,9 @@ class ChatController extends Controller
         return response()->json(['error' => 'Chat no disponible'], 404);
     }
 
-    // ============================================
+
     // ENVIAR MENSAJE (PSICÓLOGO)
-    // ============================================
+   
     
     public function psicologoEnviarMensaje(Request $request)
     {
@@ -272,10 +270,11 @@ class ChatController extends Controller
         ]);
     }
 
-    // ============================================
+
     // ABRIR/CREAR CHAT PARA UN USUARIO (PSICÓLOGO)
     // Usa desde el detalle del reporte: si existe un chat no finalizado lo reutiliza,
     // si está en 'en_espera' lo toma y lo activa, si no existe crea uno nuevo.
+    
     public function abrirChatParaUsuario(Request $request)
     {
         $request->validate([

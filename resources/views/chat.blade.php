@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Chat de Apoyo - Univida</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Casos Reportados - PsicoSalud Pro</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -348,8 +349,12 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       transition: all 0.2s;
+      flex: 1;
+      min-width: 180px;
+      text-align: center;
     }
 
     .btn-cita { background: #2e7d32; color: white; }
@@ -435,7 +440,7 @@
     <div class="case-card" tabindex="0" role="button"
   data-id="R{{ $r->id_reporte ?? $r->id ?? $loop->index }}"
   data-reporte-id="{{ $r->id_reporte ?? $r->id ?? $loop->index }}"
-      data-usuario-id="{{ $r->fk_usuario ?? optional($r->usuario)->id_usuario ?? '' }}"
+        data-usuario-id="{{ $r->fk_usuario ?? optional($r->usuario)->id_usuario ?? '' }}"
       data-nombre="{{ optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}"
       data-fecha="{{ $r->fecha }}"
       data-urgencia="media"
@@ -485,9 +490,9 @@
             <button class="btn-action btn-mensaje">
               <i class="fas fa-comment-dots"></i> Enviar mensaje
             </button>
-             <!--<button class="btn-action btn-resuelto">
-              <i class="fas fa-check"></i> Marcar como resuelto
-            </button>-->
+            <button class="btn-action btn-resuelto" type="button">
+              <i class="fas fa-check"></i> Cerrar reporte
+            </button>
           </div>
         </div>
       </div>
@@ -572,20 +577,13 @@
       
     // Guardar reporte id en el botón 'resuelto'
     const btnResuelto = document.querySelector('.btn-resuelto');
-    // Asegurarnos de obtener el ID correcto del reporte
     const reporteId = el.dataset.reporteId;
-    console.log('ID del reporte a cerrar:', reporteId); // Para diagnóstico
     if (btnResuelto && reporteId) {
-        btnResuelto.dataset.reporteId = reporteId;
-    } else {
-        console.error('No se pudo obtener el ID del reporte o el botón no existe', {
-            reporteId,
-            btnResuelto: !!btnResuelto
-        });
+      btnResuelto.dataset.reporteId = reporteId;
     }
 
-      document.getElementById('caseModal').style.display = 'flex';
-    }
+    document.getElementById('caseModal').style.display = 'flex';
+  }
 
     function closeModal() {
       document.getElementById('caseModal').style.display = 'none';
@@ -637,56 +635,29 @@
         btnResueltoGlobal.addEventListener('click', async () => {
           const reporteId = btnResueltoGlobal.dataset.reporteId || '';
           if (!reporteId) {
-              console.error('No se encontró el ID del reporte en el botón');
-              alert('Error: No se pudo determinar el ID del reporte a cerrar');
+            alert('Primero abre un caso para poder cerrarlo.');
             return;
           }
-
-            console.log('Intentando cerrar reporte con ID:', reporteId);
-          if (!confirm('¿Marcar este caso como resuelto? Esta acción moverá el caso a la sección "Cerrado".')) return;
-
+          if (!confirm('¿Cerrar este reporte? Se marcará como resuelto.')) return;
           try {
-          const baseUrl = '{{ url("/") }}';
-          const url = `${baseUrl}/psychologist/reporte/${reporteId}/cerrar`;
-          console.log('URL de cierre:', url); // Para diagnóstico
-            
+            const url = `{{ url('/psychologist/reporte') }}/${reporteId}/cerrar`;
             const res = await fetch(url, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
               }
             });
-
-            const contentType = res.headers.get('content-type') || '';
-            // Si el servidor no devuelve JSON, no mostramos el HTML de error al usuario.
-            if (!contentType.includes('application/json')) {
-              const text = await res.text();
-              // Guardar detalles en consola para diagnóstico
-              console.error('Cerrar reporte: respuesta no-JSON', res.status, text);
-              // Mensaje corto y amigable al usuario
-              alert('No se pudo cerrar el reporte. Por favor, inténtalo de nuevo más tarde.');
-              return;
-            }
-
             const data = await res.json();
             if (res.ok && data.success) {
-              // Recargar para que el panel muestre la sección cerrado actualizada
+              alert('Reporte cerrado');
               location.reload();
             } else {
-              // Registrar detalles para diagnóstico, pero mostrar solo un mensaje breve al usuario
-              const details = data.details || data.error || JSON.stringify(data);
-              console.error('Cerrar reporte: server error', res.status, details);
-              // Si el backend mandó un mensaje amigable, mostrarlo; si no, mensaje genérico
-              const userMessage = data.error && typeof data.error === 'string'
-                ? data.error
-                : 'No se pudo cerrar el reporte. Por favor, inténtalo de nuevo más tarde.';
-              alert(userMessage);
+              alert(data.error || 'No se pudo cerrar el reporte');
             }
-          } catch (err) {
-            console.error('Cerrar reporte: excepción fetch', err);
-            alert('Error al intentar cerrar el reporte: ' + (err && err.message ? err.message : err));
+          } catch (e) {
+            alert('Error de red al cerrar el reporte');
+            console.error(e);
           }
         });
       }

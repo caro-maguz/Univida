@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recursos Profesionales - PsicoSalud Pro</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -323,16 +324,16 @@
   <div class="main">
     <div class="section-header">
       <h2 style="font-size: 20px; color: var(--primary);">Biblioteca de recursos</h2>
-      <button class="upload-btn" onclick="openUploadModal()">
+     <!-- <button class="upload-btn" onclick="openUploadModal()">
         <i class="fas fa-upload"></i> Subir recurso
-      </button>
+      </button> -->
     </div>
 
     <div class="categories">
       <button class="category-btn active" data-category="todos">
         <i class="fas fa-layer-group"></i> Todos
       </button>
-      <button class="category-btn" data-category="emergencias">
+      <!--<button class="category-btn" data-category="emergencias">
         <i class="fas fa-exclamation-triangle"></i> Emergencias
       </button>
       <button class="category-btn" data-category="prevencion">
@@ -340,7 +341,7 @@
       </button>
       <button class="category-btn" data-category="acompanamiento">
         <i class="fas fa-hand-holding-heart"></i> Acompañamiento
-      </button>
+      </button>-->
     </div>
 
     <div class="resources-grid" id="resourcesGrid">
@@ -377,7 +378,7 @@
   <!-- Nota: la carga de recursos la gestiona el administrador -->
 
   <script>
-    // Opcional: podríamos implementar filtros de categorías en frontend leyendo los nombres de tipo.
+    // Opcional: implementar filtros de categorías en frontend leyendo los nombres de tipo.
     document.querySelectorAll('.category-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));

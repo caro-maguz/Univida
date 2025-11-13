@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel de Control - Psicología</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     * {
@@ -207,8 +208,8 @@
 
     <!-- Menú desplegable -->
      <div class="dropdown-menu" id="dropdownMenu">
-      <a href="#">Mi Perfil</a>
-      <a href="#">Configuración</a>
+     <!-- <a href="#">Mi Perfil</a>
+      <a href="#">Configuración</a>-->
       <form action="{{ route('logout.psicologo') }}" method="POST" style="margin:0;">
         @csrf
         <button type="submit" style="width:100%; text-align:left; padding:12px; background:none; border:none; cursor:pointer; font-family:'Delius', cursive; font-size:0.95rem; color:#333;">
@@ -231,7 +232,7 @@
       <!-- Casos Reportados -->
       <div class="card new-cases">
         <div class="card-icon"><i class="fas fa-file-medical"></i></div>
-        <div class="card-value">12</div>
+              <!--<div class="card-value">12</div>-->
         <div class="card-label">Casos Reportados</div>
         <a href="{{ route('psychologist.reporte') }}" class="card-link">Ver detalles</a>
       </div>
@@ -239,7 +240,7 @@
       <!-- Chat de Apoyo -->
       <div class="card active-chats">
         <div class="card-icon"><i class="fas fa-comments"></i></div>
-        <div class="card-value">8</div>
+        <!--<div class="card-value">8</div>-->
         <div class="card-label">Chat de Apoyo</div>
         <a href="{{ route('psychologist.chat') }}" class="card-link">Ir al chat</a>
       </div>
@@ -247,7 +248,7 @@
       <!-- Recursos Profesionales -->
       <div class="card urgent-alerts">
         <div class="card-icon"><i class="fas fa-book"></i></div>
-        <div class="card-value">24</div>
+        <!-- <div class="card-value">24</div>-->
         <div class="card-label">Recursos Profesionales</div>
         <a href="{{ route('psychologist.resources') }}" class="card-link">Explorar recursos</a>
       </div>
@@ -255,7 +256,7 @@
       <!-- Reportes Estadísticos -->
       <div class="card stats">
         <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
-        <div class="card-value">96%</div>
+         <!--<div class="card-value">96%</div> -->
         <div class="card-label">Reportes Estadísticos</div>
         <a href="{{ route('psychologist.estadisticos') }}" class="card-link">Ver reportes</a>
       </div>

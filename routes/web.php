@@ -39,6 +39,14 @@ Route::post('/logout/psicologo', [LoginController::class, 'logoutPsicologo'])->n
 Route::post('/logout/admin', [LoginController::class, 'logoutAdmin'])->name('logout.admin');
 
 // ===============================
+// RECUPERACIÓN DE CONTRASEÑA (Código de 4 dígitos)
+// ===============================
+Route::get('/forgot-password', [App\Http\Controllers\PasswordResetController::class, 'mostrarFormularioSolicitud'])->name('password.request');
+Route::post('/forgot-password', [App\Http\Controllers\PasswordResetController::class, 'enviarTokenRecuperacion'])->name('password.email');
+Route::get('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'mostrarFormularioRestablecimiento'])->name('password.reset');
+Route::post('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'restablecerContrasena'])->name('password.update');
+
+// ===============================
 // RUTAS PARA USUARIO
 // ===============================
 Route::get('/registro/usuario', fn() => view('register-user'))->name('register.user');
@@ -126,6 +134,12 @@ Route::middleware(['auth.usuario'])->group(function () {
     Route::post('/reporte', [ReporteController::class, 'store'])->name('reporte.store');
     Route::get('/chat', fn() => view('chat'))->name('chat');
     Route::get('/recursos', [RecursoController::class, 'centro'])->name('resources');
+    
+    // Test psicológico
+    Route::get('/test', [App\Http\Controllers\TestController::class, 'mostrar'])->name('test.mostrar');
+    Route::post('/test/procesar', [App\Http\Controllers\TestController::class, 'procesar'])->name('test.procesar');
+    Route::get('/test/historial', [App\Http\Controllers\TestController::class, 'historial'])->name('test.historial');
+    
     // Notificaciones motivacionales
     Route::post('/notificacion/config', [App\Http\Controllers\NotificacionMotivacionalController::class, 'guardarConfig'])->name('notificacion.config');
     Route::get('/notificacion/siguiente', [App\Http\Controllers\NotificacionMotivacionalController::class, 'siguiente'])->name('notificacion.siguiente');

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Univida - Registro Usuario</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -54,6 +55,7 @@
     .form-group {
       margin-bottom: 18px;
       text-align: left;
+      position: relative;
     }
 
     .form-group label {
@@ -75,6 +77,27 @@
     .form-group input:focus {
       border-color: #004aad;
       box-shadow: 0 0 6px rgba(0,74,173,0.4);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 65%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      color: #004aad;
+      padding: 0;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .toggle-password span {
+      display: inline-block;
     }
 
     .registro-button {
@@ -134,6 +157,9 @@
       <div class="form-group">
         <label for="password">Contraseña</label>
         <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+        <button type="button" class="toggle-password" onclick="togglePassword()">
+          <span id="eyeIcon">👁️</span>
+        </button>
       </div>
 
       <button type="submit" class="registro-button">Completar Registro</button>
@@ -146,6 +172,19 @@
   </div>
 
     <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById("password");
+      const eyeIcon = document.getElementById("eyeIcon");
+      
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.textContent = "👁️";
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.textContent = "👁️";
+      }
+    }
+
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       const alias = document.getElementById("alias").value.trim();
       const correo = document.getElementById("correo").value.trim();

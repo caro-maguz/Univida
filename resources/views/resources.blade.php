@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Univida - Protocolos y Contactos</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -18,33 +19,33 @@
       min-height: 100vh;
       color: #333;
     }
-
+    /* Botón Regresar al Inicio con borde azul */
+        /* Header */
     header {
       display: flex;
       justify-content: flex-end;
       padding: 1rem 2rem;
-      border-bottom: 3px solid #0077cc;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid #004aad20;
     }
 
-    /* Botón Regresar al Inicio con borde azul */
     header a {
-      background: transparent;
-      border: 2px solid #0077cc;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      border: 2px solid #004aad;
+      color: #004aad;
       text-decoration: none;
-      color: #0077cc;
-      font-size: 0.9rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 50px;
       font-weight: 600;
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
 
     header a:hover {
-      background: #0077cc;
-      color: #fff;
+      background: #ffd54f;
+      border-color: #ffd54f;
+      color: #222;
     }
+
 
     main {
       display: flex;

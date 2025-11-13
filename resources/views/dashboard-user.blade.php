@@ -9,6 +9,7 @@ $inicial = strtoupper(substr($usuario, 0, 1));
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Univida - Inicio</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -141,7 +142,7 @@ $inicial = strtoupper(substr($usuario, 0, 1));
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      max-width: 400px;
+      max-width: 500px;
     }
 
     .btn {
@@ -215,12 +216,14 @@ $inicial = strtoupper(substr($usuario, 0, 1));
         <div class="buttons">
           <a href="{{ route('reporte') }}" class="btn">Reportar Caso</a>
           <a href="{{ route('chat') }}" class="btn">Chat de Apoyo</a>
+          <a href="{{ route('test.mostrar') }}" class="btn">🧠 Realizar Test</a>
           <a href="{{ route('resources') }}" class="btn">Ver Recursos</a>
           <a href="{{ route('historias') }}" class="btn">Historias Anónimas</a>
+          <a href="{{ route('test.historial') }}" class="btn">📊 Mi Historial</a>
         </div>
 
         <!-- Configuración de mensajes motivacionales -->
-        <div style="margin-top: 1.5rem; padding: 1rem; border:1px solid #cfe2ff; background:#f8fbff; border-radius:12px;">
+        <div style="margin-top: 1.5rem; padding: 1rem; border:1px solid #cfe2ff; background:#f8fbff; border-radius:12px; max-width:400px;">
           <h3 style="color:#004aad; font-size:1.1rem; margin-bottom:0.6rem;">Mensajes motivacionales</h3>
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <label for="freq" style="min-width:140px;">Frecuencia:</label>

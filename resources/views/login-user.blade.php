@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Univida - Iniciar Sesión Usuario</title>
+  <link rel="icon" type="image/png" href="{{ asset('img/Logo.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     * {
@@ -87,6 +88,15 @@
       border: none;
       font-size: 1.1rem;
       color: #004aad;
+      padding: 0;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .toggle-password span {
+      display: inline-block;
     }
 
     .login-button {
@@ -157,10 +167,18 @@
       <div class="form-group">
         <label for="password">Contraseña</label>
         <input type="password" id="password" name="contrasena" placeholder="••••••••" required>
-        <button type="button" class="toggle-password" onclick="togglePassword()">👁</button>
+        <button type="button" class="toggle-password" onclick="togglePassword()">
+          <span id="eyeIcon">👁️</span>
+        </button>
       </div>
 
       <button type="submit" class="login-button">Ingresar</button>
+
+      @if(session('success'))
+        <p style="background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.9rem; border-left: 4px solid #2e7d32;">
+          {{ session('success') }}
+        </p>
+      @endif
 
       @error('login_error')
         <p class="error-message">{{ $message }}</p>
@@ -168,7 +186,7 @@
     </form>
 
     <!-- Enlace para recuperar contraseña -->
-    <a href="#" class="recover-password">¿Olvidaste tu contraseña?</a>
+    <a href="{{ route('password.request') }}" class="recover-password">¿Olvidaste tu contraseña?</a>
 
     <!-- Enlaces extra -->
     <div class="extra-links">
@@ -180,7 +198,15 @@
   <script>
     function togglePassword() {
       const passwordInput = document.getElementById("password");
-      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+      const eyeIcon = document.getElementById("eyeIcon");
+      
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.textContent = "👁️";
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.textContent = "👁️";
+      }
     }
   </script>
 </body>
