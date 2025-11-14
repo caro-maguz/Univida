@@ -24,7 +24,7 @@ class TestController extends Controller
         $preguntas = PreguntaTest::all();
 
         if ($preguntas->isEmpty()) {
-            return redirect()->route('inicio.usuario')
+            return redirect()->route('dashboard.user')
                 ->with('error', 'No hay preguntas disponibles en este momento.');
         }
 

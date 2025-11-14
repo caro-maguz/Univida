@@ -147,7 +147,7 @@
 <body>
 
   <header>
-    <a href="{{ route('inicio.usuario') }}">Regresar</a>
+    <a href="{{ route('dashboard.user') }}">Regresar</a>
   </header>
 
   <main>

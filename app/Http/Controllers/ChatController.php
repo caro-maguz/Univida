@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Chat;
-use App\Models\Mensaje;
+use App\Models\MensajeChat;
 use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
@@ -24,30 +24,30 @@ class ChatController extends Controller
             $usuarioId = session('id');
 
         // Obtener o crear chat activo para el usuario
-        $chat = Chat::where('usuario_id', $usuarioId)
-            ->whereIn('estado', ['activo', 'en_espera'])
+        $chat = Chat::where('fk_usuario', $usuarioId)
+            ->whereIn('estado', ['activo', 'cerrado'])
             ->first();
 
         if (!$chat) {
             // Crear nuevo chat
             $chat = Chat::create([
-                'usuario_id' => $usuarioId,
-                'estado' => 'en_espera',
-                'iniciado_en' => now()
+                'fk_usuario' => $usuarioId,
+                'estado' => 'activo',
+                'fecha_inicio' => now()
             ]);
 
             // Mensaje de bienvenida automático
-            Mensaje::create([
-                'chat_id' => $chat->id,
-                'tipo_remitente' => 'sistema',
-                'mensaje' => 'Hola, gracias por escribirnos 😊 ¿Cómo te sientes hoy?',
-                'leido' => true
+            \App\Models\MensajeChat::create([
+                'fk_chat' => $chat->id_chat,
+                'emisor' => 'sistema',
+                'contenido' => 'Hola, gracias por escribirnos 😊 ¿Cómo te sientes hoy?',
+                'fecha_hora' => now()
             ]);
         }
 
         // Obtener todos los mensajes del chat
-        $mensajes = Mensaje::where('chat_id', $chat->id)
-            ->orderBy('created_at', 'asc')
+        $mensajes = \App\Models\MensajeChat::where('fk_chat', $chat->id_chat)
+            ->orderBy('fecha_hora', 'asc')
             ->get();
 
         return view('chat', compact('chat', 'mensajes'));
@@ -60,35 +60,40 @@ class ChatController extends Controller
     public function enviarMensaje(Request $request)
     {
         $request->validate([
-            'mensaje' => 'required|string|max:1000',
-            'chat_id' => 'required|exists:chats,id'
+            'chat_id' => 'required|exists:chat,id_chat',
+            'contenido' => 'required_without:mensaje|string|max:1000',
+            'mensaje' => 'required_without:contenido|string|max:1000'
         ]);
 
-            $usuarioId = session('id');
+        $usuarioId = session('id');
 
         // Verificar que el chat pertenece al usuario
-        $chat = Chat::where('id', $request->chat_id)
-            ->where('usuario_id', $usuarioId)
+        $chat = Chat::where('id_chat', $request->chat_id)
+            ->where('fk_usuario', $usuarioId)
             ->first();
 
         if (!$chat) {
             return response()->json(['error' => 'Chat no encontrado'], 404);
         }
 
+        $texto = $request->input('contenido') ?? $request->input('mensaje');
+
         // Crear el mensaje
-        $mensaje = Mensaje::create([
-            'chat_id' => $chat->id,
+        $mensaje = MensajeChat::create([
+            'fk_chat' => $chat->id_chat,
             'tipo_remitente' => 'usuario',
-            'remitente_id' => $usuarioId,
-            'mensaje' => $request->mensaje,
+            'emisor' => 'usuario',
+            'contenido' => $texto,
+            'fecha_hora' => now(),
             'leido' => false
         ]);
 
         return response()->json([
             'success' => true,
             'mensaje' => [
-                'id' => $mensaje->id,
-                'mensaje' => $mensaje->mensaje,
+                'id' => $mensaje->id_mensaje,
+                'mensaje' => $mensaje->contenido,
+                'contenido' => $mensaje->contenido,
                 'tipo_remitente' => $mensaje->tipo_remitente,
                 'created_at' => $mensaje->created_at->format('H:i')
             ]
@@ -103,16 +108,17 @@ class ChatController extends Controller
         $chatId = $request->chat_id;
         $ultimoMensajeId = $request->ultimo_mensaje_id ?? 0;
 
-        $mensajes = Mensaje::where('chat_id', $chatId)
-            ->where('id', '>', $ultimoMensajeId)
+        $mensajes = MensajeChat::where('fk_chat', $chatId)
+            ->where('id_mensaje', '>', $ultimoMensajeId)
             ->orderBy('created_at', 'asc')
             ->get();
 
         return response()->json([
             'mensajes' => $mensajes->map(function($msg) {
                 return [
-                    'id' => $msg->id,
-                    'mensaje' => $msg->mensaje,
+                    'id' => $msg->id_mensaje,
+                    'mensaje' => $msg->contenido,
+                    'contenido' => $msg->contenido,
                     'tipo_remitente' => $msg->tipo_remitente,
                     'created_at' => $msg->created_at->format('H:i')
                 ];
@@ -127,17 +133,16 @@ class ChatController extends Controller
     public function finalizarChat(Request $request)
     {
         $chatId = $request->chat_id;
-        // Usar la clave de sesión unificada 'id' para el usuario (coherente con mostrarChat/enviarMensaje)
         $usuarioId = session('id');
 
-        $chat = Chat::where('id', $chatId)
-            ->where('usuario_id', $usuarioId)
+        $chat = Chat::where('id_chat', $chatId)
+            ->where('fk_usuario', $usuarioId)
             ->first();
 
         if ($chat) {
             $chat->update([
-                'estado' => 'finalizado',
-                'finalizado_en' => now()
+                'estado' => 'cerrado',
+                'fecha_fin' => now()
             ]);
 
             return response()->json(['success' => true]);
@@ -157,25 +162,30 @@ class ChatController extends Controller
             return redirect()->route('login.user');
         }
 
-            // En el LoginController la sesión guarda el id común en la clave 'id'
-            $psicologoId = session('id');
+        $psicologoId = session('id');
 
-        // Obtener chats en espera y activos del psicólogo
-        $chatsEnEspera = Chat::where('estado', 'en_espera')
-            ->with(['usuario', 'ultimoMensaje'])
-            ->orderBy('iniciado_en', 'desc')
+        // Obtener chats sin psicólogo asignado (en espera)
+        $chatsEnEspera = Chat::where('estado', 'activo')
+            ->whereNull('fk_psicologo')
+            ->with('usuario')
+            ->orderBy('fecha_inicio', 'desc')
             ->get();
 
-        $chatsActivos = Chat::where('psicologo_id', $psicologoId)
+        // Chats activos del psicólogo
+        // Ordenar por último mensaje (fallback fecha_inicio) sin usar updated_at inexistente
+        $chatsActivos = Chat::where('fk_psicologo', $psicologoId)
             ->where('estado', 'activo')
-            ->with(['usuario', 'ultimoMensaje'])
-            ->orderBy('updated_at', 'desc')
-            ->get();
+            ->with(['usuario','ultimoMensaje'])
+            ->get()
+            ->sortByDesc(function($c){
+                return optional(optional($c->ultimoMensaje)->created_at) ?? $c->fecha_inicio;
+            })->values();
 
-        $chatsFinalizados = Chat::where('psicologo_id', $psicologoId)
-            ->where('estado', 'finalizado')
-            ->with(['usuario', 'ultimoMensaje'])
-            ->orderBy('finalizado_en', 'desc')
+        // Chats cerrados del psicólogo
+        $chatsFinalizados = Chat::where('fk_psicologo', $psicologoId)
+            ->where('estado', 'cerrado')
+            ->with('usuario')
+            ->orderBy('fecha_fin', 'desc')
             ->limit(10)
             ->get();
 
@@ -187,11 +197,15 @@ class ChatController extends Controller
     
     public function verChat($chatId)
     {
+        // Verificar sesión de psicólogo
         if (!session('rol') || session('rol') !== 'psicologo') {
             return redirect()->route('login.user');
         }
 
-        $chat = Chat::with(['usuario', 'mensajes'])->findOrFail($chatId);
+        // Cargamos usuario y mensajes para que la vista legacy use $chat->mensajes
+        $chat = Chat::with(['usuario','mensajes' => function($q){
+            $q->orderBy('fecha_hora','asc');
+        }])->findOrFail($chatId);
         
         return view('psychologist.chat-detalle', compact('chat'));
     }
@@ -203,23 +217,25 @@ class ChatController extends Controller
     public function tomarChat(Request $request)
     {
         $chatId = $request->chat_id;
-        $psicologoId = session('psicologo_id');
+        $psicologoId = session('id');
 
-        $chat = Chat::where('id', $chatId)
-            ->where('estado', 'en_espera')
+        $chat = Chat::where('id_chat', $chatId)
+            ->where('estado', 'activo')
+            ->whereNull('fk_psicologo')
             ->first();
 
         if ($chat) {
             $chat->update([
-                'psicologo_id' => $psicologoId,
-                'estado' => 'activo'
+                'fk_psicologo' => $psicologoId
             ]);
 
             // Mensaje automático
-            Mensaje::create([
-                'chat_id' => $chat->id,
+            MensajeChat::create([
+                'fk_chat' => $chat->id_chat,
                 'tipo_remitente' => 'sistema',
-                'mensaje' => 'Un profesional se ha unido a la conversación.',
+                'emisor' => 'sistema',
+                'contenido' => 'Un profesional se ha unido a la conversación.',
+                'fecha_hora' => now(),
                 'leido' => false
             ]);
 
@@ -236,14 +252,15 @@ class ChatController extends Controller
     public function psicologoEnviarMensaje(Request $request)
     {
         $request->validate([
-            'mensaje' => 'required|string|max:1000',
-            'chat_id' => 'required|exists:chats,id'
+            'chat_id' => 'required|exists:chat,id_chat',
+            'contenido' => 'required_without:mensaje|string|max:1000',
+            'mensaje' => 'required_without:contenido|string|max:1000'
         ]);
 
-        $psicologoId = session('psicologo_id');
+        $psicologoId = session('id');
 
-        $chat = Chat::where('id', $request->chat_id)
-            ->where('psicologo_id', $psicologoId)
+        $chat = Chat::where('id_chat', $request->chat_id)
+            ->where('fk_psicologo', $psicologoId)
             ->where('estado', 'activo')
             ->first();
 
@@ -251,19 +268,23 @@ class ChatController extends Controller
             return response()->json(['error' => 'No tienes acceso a este chat'], 403);
         }
 
-        $mensaje = Mensaje::create([
-            'chat_id' => $chat->id,
+        $texto = $request->input('contenido') ?? $request->input('mensaje');
+
+        $mensaje = MensajeChat::create([
+            'fk_chat' => $chat->id_chat,
             'tipo_remitente' => 'psicologo',
-            'remitente_id' => $psicologoId,
-            'mensaje' => $request->mensaje,
+            'emisor' => 'psicologo',
+            'contenido' => $texto,
+            'fecha_hora' => now(),
             'leido' => false
         ]);
 
         return response()->json([
             'success' => true,
             'mensaje' => [
-                'id' => $mensaje->id,
-                'mensaje' => $mensaje->mensaje,
+                'id' => $mensaje->id_mensaje,
+                'mensaje' => $mensaje->contenido,
+                'contenido' => $mensaje->contenido,
                 'tipo_remitente' => $mensaje->tipo_remitente,
                 'created_at' => $mensaje->created_at->format('H:i')
             ]
@@ -282,48 +303,46 @@ class ChatController extends Controller
         ]);
 
         $usuarioId = $request->usuario_id;
-        $psicologoId = session('id') ?? session('psicologo_id');
+        $psicologoId = session('id');
 
-        // Buscar un chat no finalizado del usuario
-        $chat = Chat::where('usuario_id', $usuarioId)
-            ->whereIn('estado', ['en_espera', 'activo'])
+        // Buscar un chat activo del usuario
+        $chat = Chat::where('fk_usuario', $usuarioId)
+            ->where('estado', 'activo')
             ->first();
 
         if ($chat) {
-            if ($chat->estado === 'en_espera') {
-                $chat->update([
-                    'psicologo_id' => $psicologoId,
-                    'estado' => 'activo'
-                ]);
+            if (!$chat->fk_psicologo) {
+                // Asignar psicólogo si aún no tiene
+                $chat->update(['fk_psicologo' => $psicologoId]);
 
-                // Mensaje automático informando que el profesional se unió
-                Mensaje::create([
-                    'chat_id' => $chat->id,
+                MensajeChat::create([
+                    'fk_chat' => $chat->id_chat,
                     'tipo_remitente' => 'sistema',
-                    'mensaje' => 'Un profesional se ha unido a la conversación.',
+                    'emisor' => 'sistema',
+                    'contenido' => 'Un profesional se ha unido a la conversación.',
+                    'fecha_hora' => now(),
                     'leido' => false
                 ]);
-            } elseif ($chat->estado === 'activo' && !$chat->psicologo_id) {
-                // Asignar psicólogo si aún no tiene
-                $chat->update(['psicologo_id' => $psicologoId]);
             }
         } else {
             // Crear un chat activo asignado al psicólogo
             $chat = Chat::create([
-                'usuario_id' => $usuarioId,
-                'psicologo_id' => $psicologoId,
+                'fk_usuario' => $usuarioId,
+                'fk_psicologo' => $psicologoId,
                 'estado' => 'activo',
-                'iniciado_en' => now()
+                'fecha_inicio' => now()
             ]);
 
-            Mensaje::create([
-                'chat_id' => $chat->id,
+            MensajeChat::create([
+                'fk_chat' => $chat->id_chat,
                 'tipo_remitente' => 'sistema',
-                'mensaje' => 'Un profesional ha iniciado la conversación.',
+                'emisor' => 'sistema',
+                'contenido' => 'Un profesional ha iniciado la conversación.',
+                'fecha_hora' => now(),
                 'leido' => false
             ]);
         }
 
-        return response()->json(['success' => true, 'chat_id' => $chat->id]);
+        return response()->json(['success' => true, 'chat_id' => $chat->id_chat]);
     }
 }

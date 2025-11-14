@@ -17,18 +17,18 @@ class LoginController extends Controller
     // Cerrar sesión
      public function logoutPsicologo()
     {
-        Session::forget(['rol', 'id', 'nombre', 'psicologo_id', 'usuario_id']);
+        Session::forget(['rol', 'id', 'nombre']);
         return redirect()->route('login.user');
     }
 
     public function logoutAdmin()
     {
-    Session::forget(['rol', 'id', 'nombre', 'psicologo_id', 'usuario_id']);
+    Session::forget(['rol', 'id', 'nombre']);
     return redirect()->route('login.user');
     }
     public function logoutUsuario()
     {
-    Session::forget(['rol', 'id', 'nombre', 'psicologo_id', 'usuario_id']);
+    Session::forget(['rol', 'id', 'nombre']);
     return redirect()->route('login.user');
     }
     
@@ -50,20 +50,19 @@ class LoginController extends Controller
         $admin = DB::table('administrador')->where('correo', $correo)->first();
 
         if ($usuario && Hash::check($contrasena, $usuario->contrasena)) {
-            // Guardar identificadores con claves explícitas usadas en el módulo de chat
             session([
-                'rol' => 'usuario',
+                'rol' => 'usuario', 
                 'id' => $usuario->id_usuario,
                 'usuario_id' => $usuario->id_usuario,
                 'nombre' => $usuario->nombre
             ]);
-            return redirect()->route('inicio.usuario');
+            return redirect()->route('dashboard.user');
         }
 
         if ($psicologo && Hash::check($contrasena, $psicologo->contrasena)) {
             session([
-                'rol' => 'psicologo',
-                'id' => $psicologo->id_psicologo,
+                'rol' => 'psicologo', 
+                'id' => $psicologo->id_psicologo, 
                 'psicologo_id' => $psicologo->id_psicologo,
                 'nombre' => $psicologo->nombre
             ]);
@@ -72,8 +71,9 @@ class LoginController extends Controller
 
         if ($admin && Hash::check($contrasena, $admin->contrasena)) {
             session([
-                'rol' => 'admin',
+                'rol' => 'admin', 
                 'id' => $admin->id_admin,
+                'admin_id' => $admin->id_admin,
                 'nombre' => $admin->nombre
             ]);
             return redirect()->route('administrador.dashboard');

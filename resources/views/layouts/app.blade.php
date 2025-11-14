@@ -20,7 +20,7 @@
       <a class="navbar-brand text-primary fw-bold" href="{{ route('home') }}">Univida</a>
       <div class="ms-auto d-flex gap-2">
         @if(session('rol') === 'usuario')
-          <a class="btn btn-outline-primary btn-sm" href="{{ route('inicio.usuario') }}">Panel Usuario</a>
+          <a class="btn btn-outline-primary btn-sm" href="{{ route('dashboard.user') }}">Panel Usuario</a>
         @elseif(session('rol') === 'psicologo')
           <a class="btn btn-outline-primary btn-sm" href="{{ route('dashboard.psychologist') }}">Panel Psicólogo</a>
         @elseif(session('rol') === 'admin')

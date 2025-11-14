@@ -239,7 +239,7 @@
 </head>
 <body>
   <header>
-    <a href="<?php echo e(route('inicio.usuario')); ?>">Regresar</a>
+    <a href="<?php echo e(route('dashboard.user')); ?>">Regresar</a>
   </header>
 
   <main>
@@ -411,7 +411,7 @@
         if (data.success) {
           clearInterval(polling);
           alert('Chat finalizado. Gracias por usar nuestro servicio.');
-          window.location.href = '<?php echo e(route("inicio.usuario")); ?>';
+          window.location.href = '<?php echo e(route("dashboard.user")); ?>';
         }
       } catch (error) {
         console.error('Error al finalizar chat:', error);

@@ -176,7 +176,7 @@
 </head>
 <body>
   <div class="container">
-    <a href="<?php echo e(route('inicio.usuario')); ?>" class="volver">← Volver al inicio</a>
+    <a href="<?php echo e(route('dashboard.user')); ?>" class="volver">← Volver al inicio</a>
     
     <h1>🧠 Test de Evaluación Emocional</h1>
     

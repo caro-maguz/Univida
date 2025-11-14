@@ -16,15 +16,14 @@ class AdminHistoriaController extends Controller
     }
 
     /**
-     * Mostrar todas las historias (pendientes, aprobadas, rechazadas)
+     * Mostrar todas las historias
      */
     public function index()
     {
         $this->verificarAdmin();
         
-        $historias = Historia::with(['usuario', 'moderador'])
-            ->orderByRaw("FIELD(estado, 'pendiente', 'aprobada', 'rechazada')")
-            ->orderBy('created_at', 'desc')
+        $historias = Historia::with('usuario')
+            ->orderBy('fecha', 'desc')
             ->get();
         
         return view('administrador.historias.index', compact('historias'));
@@ -37,7 +36,7 @@ class AdminHistoriaController extends Controller
     {
         $this->verificarAdmin();
         
-        $historia = Historia::with(['usuario', 'moderador'])->findOrFail($id);
+        $historia = Historia::with('usuario')->findOrFail($id);
         
         return view('administrador.historias.show', compact('historia'));
     }
@@ -52,9 +51,8 @@ class AdminHistoriaController extends Controller
         $historia = Historia::findOrFail($id);
         $historia->update([
             'estado' => 'aprobada',
-            'moderador_id' => session('id'),
-            'fecha_moderacion' => now(),
-            'motivo_rechazo' => null
+            'fk_moderador' => session('id_admin'),
+            'fecha_moderacion' => now()
         ]);
         
         return redirect()->route('administrador.historias.index')
@@ -75,13 +73,13 @@ class AdminHistoriaController extends Controller
         $historia = Historia::findOrFail($id);
         $historia->update([
             'estado' => 'rechazada',
-            'moderador_id' => session('id'),
+            'fk_moderador' => session('id_admin'),
             'fecha_moderacion' => now(),
             'motivo_rechazo' => $request->motivo_rechazo
         ]);
         
         return redirect()->route('administrador.historias.index')
-            ->with('success', 'Historia rechazada');
+            ->with('success', 'Historia rechazada correctamente');
     }
 
     /**

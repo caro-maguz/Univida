@@ -225,7 +225,7 @@
           <div class="chat-card en-espera">
             <div class="chat-info">
               <span class="usuario-nombre">{{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</span>
-              <span class="chat-tiempo">{{ $chat->iniciado_en->diffForHumans() }}</span>
+              <span class="chat-tiempo">{{ optional($chat->iniciado_en)->diffForHumans() }}</span>
             </div>
             
             @if($chat->ultimoMensaje)
@@ -256,7 +256,7 @@
           <div class="chat-card activo">
             <div class="chat-info">
               <span class="usuario-nombre">{{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</span>
-              <span class="chat-tiempo">{{ $chat->updated_at->diffForHumans() }}</span>
+              <span class="chat-tiempo">{{ optional($chat->updated_at)->diffForHumans() }}</span>
             </div>
             
             @if($chat->ultimoMensaje)
@@ -287,7 +287,7 @@
           <div class="chat-card finalizado">
             <div class="chat-info">
               <span class="usuario-nombre">{{ optional($chat->usuario)->nombre ?? 'Usuario #' . $chat->usuario_id }}</span>
-              <span class="chat-tiempo">{{ $chat->finalizado_en->diffForHumans() }}</span>
+              <span class="chat-tiempo">{{ optional($chat->finalizado_en)->diffForHumans() }}</span>
             </div>
             
             @if($chat->ultimoMensaje)

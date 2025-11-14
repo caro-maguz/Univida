@@ -233,7 +233,7 @@
     <div class="acciones">
       <a href="{{ route('chat') }}" class="btn btn-primary">💬 Chat de Apoyo</a>
       <a href="{{ route('resources') }}" class="btn btn-secondary">📚 Ver Recursos</a>
-      <a href="{{ route('inicio.usuario') }}" class="btn btn-outline">⬅ Volver al Inicio</a>
+      <a href="{{ route('dashboard.user') }}" class="btn btn-outline">⬅ Volver al Inicio</a>
     </div>
 
     <p class="nota-privacidad">

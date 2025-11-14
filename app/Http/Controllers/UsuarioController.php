@@ -43,6 +43,6 @@ class UsuarioController extends Controller
         // Iniciar sesión en la aplicación
         session(['rol' => 'usuario', 'id' => $usuario->id_usuario, 'nombre' => $usuario->nombre]);
 
-        return redirect()->route('inicio.usuario');
+        return redirect()->route('dashboard.user');
     }
 }

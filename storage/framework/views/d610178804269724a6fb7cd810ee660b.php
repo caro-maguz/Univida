@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resultado del Test - Univida</title>
+  <link rel="icon" type="image/png" href="<?php echo e(asset('img/Logo.png')); ?>">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
     
@@ -232,7 +233,7 @@
     <div class="acciones">
       <a href="<?php echo e(route('chat')); ?>" class="btn btn-primary">💬 Chat de Apoyo</a>
       <a href="<?php echo e(route('resources')); ?>" class="btn btn-secondary">📚 Ver Recursos</a>
-      <a href="<?php echo e(route('inicio.usuario')); ?>" class="btn btn-outline">⬅ Volver al Inicio</a>
+      <a href="<?php echo e(route('dashboard.user')); ?>" class="btn btn-outline">⬅ Volver al Inicio</a>
     </div>
 
     <p class="nota-privacidad">

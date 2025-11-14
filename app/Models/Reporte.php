@@ -15,6 +15,7 @@ class Reporte extends Model
     public $incrementing = true;
     protected $fillable = ['fecha', 'descripcion', 'anonimo', 'fk_usuario', 'fk_tipo_violencia', 'fk_psicologo', 'estado'];
 
+    // Relaciones
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'fk_usuario');

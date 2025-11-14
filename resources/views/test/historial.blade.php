@@ -116,7 +116,7 @@
 </head>
 <body>
   <div class="container">
-    <a href="{{ route('inicio.usuario') }}" class="volver">← Volver al inicio</a>
+    <a href="{{ route('dashboard.user') }}" class="volver">← Volver al inicio</a>
     
     <h1>📊 Historial de Tests</h1>
 

@@ -1,8 +1,3 @@
-<?php
-session_start();
-$usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : "Usuario";
-$inicial = strtoupper(substr($usuario, 0, 1));
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -193,7 +188,7 @@ $inicial = strtoupper(substr($usuario, 0, 1));
   <!-- Header con usuario -->
 <header>
   <div class="user-menu" onclick="toggleMenu()">
-    <div class="user-icon"><?php echo $inicial; ?></div>
+    <div class="user-icon"><?php echo e(strtoupper(substr(session('nombre', 'U'), 0, 1))); ?></div>
     <div class="dropdown">
       <form action="<?php echo e(route('logout.usuario')); ?>" method="POST" style="margin:0;">
         <?php echo csrf_field(); ?>
@@ -328,7 +323,7 @@ $inicial = strtoupper(substr($usuario, 0, 1));
       }catch(e){}
     });
 
-    // Llamar al cargar la página y cada 5 minutos
+    // Llamar al cargar la página y cada 5 minutos 
     document.addEventListener('DOMContentLoaded', () => {
       obtenerMotivacion();
       setInterval(obtenerMotivacion, 5 * 60 * 1000);

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamp('finalizado_en')->nullable();
             $table->timestamps();
             
-            // Relaciones ajustadas a TUS tablas
+            // Relaciones ajustadas
             $table->foreign('usuario_id')->references('id_usuario')->on('usuario')->onDelete('cascade');
             $table->foreign('psicologo_id')->references('id_psicologo')->on('psicologo')->onDelete('set null');
         });

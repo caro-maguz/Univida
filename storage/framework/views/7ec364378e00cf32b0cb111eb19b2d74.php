@@ -147,7 +147,7 @@
 <body>
 
   <header>
-    <a href="<?php echo e(route('inicio.usuario')); ?>">Regresar</a>
+    <a href="<?php echo e(route('dashboard.user')); ?>">Regresar</a>
   </header>
 
   <main>

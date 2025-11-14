@@ -56,7 +56,7 @@ class HistoriaController extends Controller
         $historia = Historia::create([
             'contenido' => $request->historia,
             'anonimo' => true,
-            'usuario_id' => session('id') ?? null,
+            'fk_usuario' => session('id') ?? null,
             'estado' => 'pendiente', // Por defecto pendiente de moderación
         ]);
 

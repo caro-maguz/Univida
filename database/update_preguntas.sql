@@ -1,0 +1,21 @@
+-- Actualizar preguntas del test con tildes y signos correctos
+UPDATE pregunta_test SET enunciado = '¿Alguien en tu entorno te insulta, humilla o ridiculiza constantemente?' WHERE id_pregunta = 1;
+UPDATE pregunta_test SET enunciado = '¿Has recibido comentarios que te hacen sentir inferior, incapaz o sin valor?' WHERE id_pregunta = 2;
+UPDATE pregunta_test SET enunciado = '¿Has sido amenazado/a o intimidado/a por alguien cercano?' WHERE id_pregunta = 3;
+UPDATE pregunta_test SET enunciado = '¿Te hacen sentir culpable por cosas que no son tu responsabilidad?' WHERE id_pregunta = 4;
+UPDATE pregunta_test SET enunciado = '¿Te han alejado de tus amigos, familia o personas importantes para ti?' WHERE id_pregunta = 5;
+UPDATE pregunta_test SET enunciado = '¿Alguien controla excesivamente tus actividades, decisiones o forma de vestir?' WHERE id_pregunta = 6;
+UPDATE pregunta_test SET enunciado = '¿Invaden tu privacidad revisando tus pertenencias, mensajes o redes sociales sin permiso?' WHERE id_pregunta = 7;
+UPDATE pregunta_test SET enunciado = '¿Sientes miedo constante de expresar tus opiniones o hacer enojar a alguien?' WHERE id_pregunta = 8;
+UPDATE pregunta_test SET enunciado = '¿Has recibido empujones, jalones, sacudidas o agarrones violentos?' WHERE id_pregunta = 9;
+UPDATE pregunta_test SET enunciado = '¿Has sido golpeado/a, abofeteado/a o agredido/a físicamente?' WHERE id_pregunta = 10;
+UPDATE pregunta_test SET enunciado = '¿Han destruido o lanzado objetos cerca de ti para intimidarte?' WHERE id_pregunta = 11;
+UPDATE pregunta_test SET enunciado = '¿Te han impedido salir, te han encerrado o bloqueado el paso físicamente?' WHERE id_pregunta = 12;
+UPDATE pregunta_test SET enunciado = '¿Has sido presionado/a u obligado/a a realizar actos sexuales contra tu voluntad?' WHERE id_pregunta = 13;
+UPDATE pregunta_test SET enunciado = '¿Has experimentado tocamientos o acercamientos sexuales no deseados?' WHERE id_pregunta = 14;
+UPDATE pregunta_test SET enunciado = '¿Han ignorado tu negativa o te han hecho sentir culpable por no acceder a demandas sexuales?' WHERE id_pregunta = 15;
+UPDATE pregunta_test SET enunciado = '¿Has recibido comentarios ofensivos, humillantes o acoso de índole sexual?' WHERE id_pregunta = 16;
+UPDATE pregunta_test SET enunciado = '¿Alguien controla completamente tus recursos económicos o te exige rendir cuentas de cada gasto?' WHERE id_pregunta = 17;
+UPDATE pregunta_test SET enunciado = '¿Te impiden trabajar, estudiar o desarrollarte profesionalmente?' WHERE id_pregunta = 18;
+UPDATE pregunta_test SET enunciado = '¿Han tomado o usado tu dinero, tarjetas o propiedades sin tu autorización?' WHERE id_pregunta = 19;
+UPDATE pregunta_test SET enunciado = '¿Te niegan recursos para cubrir necesidades básicas como alimentación, salud o educación?' WHERE id_pregunta = 20;

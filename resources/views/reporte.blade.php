@@ -176,7 +176,7 @@
 <body>
   <!-- Header -->
   <header>
-    <a href="{{ route('inicio.usuario') }}">Regresar</a>
+    <a href="{{ route('dashboard.user') }}">Regresar</a>
   </header>
 
   <!-- Main -->
@@ -218,8 +218,7 @@
           <label for="fecha">Fecha</label>
           <input type="date" id="fecha" name="fecha" required>
 
-          <!-- El checkbox de anonimato se elimina: todos los reportes se envían como anónimos.
-               Se incluye un campo hidden por claridad en la petición. -->
+          <!-- todos los reportes se envían como anónimos. -->
           <input type="hidden" name="anonimo" value="1">
 
           <button type="submit">Enviar Reporte</button>

@@ -12,9 +12,9 @@ use App\Http\Controllers\PsicologoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\HistoriaController;
 
-// ===============================
+
 // PÁGINAS PRINCIPALES Y BÁSICAS
-// ===============================
+
 Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('/rol', fn() => view('rol'))->name('rol');
 Route::get('/acerca', fn() => view('about'))->name('about');
@@ -24,9 +24,8 @@ Route::get('/servicios', fn() => view('services'))->name('services');
 Route::get('/chat', fn() => view('chat'))->name('chat');
 // (El formulario de reporte es servido dentro de las rutas protegidas de usuario)
 
-// ===============================
 // LOGIN Y LOGOUT GENERAL
-// ===============================
+
 // Mostrar formulario de login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.user');
 
@@ -38,38 +37,39 @@ Route::post('/logout/usuario', [LoginController::class, 'logoutUsuario'])->name(
 Route::post('/logout/psicologo', [LoginController::class, 'logoutPsicologo'])->name('logout.psicologo');
 Route::post('/logout/admin', [LoginController::class, 'logoutAdmin'])->name('logout.admin');
 
-// ===============================
+
 // RECUPERACIÓN DE CONTRASEÑA (Código de 4 dígitos)
-// ===============================
+
 Route::get('/forgot-password', [App\Http\Controllers\PasswordResetController::class, 'mostrarFormularioSolicitud'])->name('password.request');
 Route::post('/forgot-password', [App\Http\Controllers\PasswordResetController::class, 'enviarTokenRecuperacion'])->name('password.email');
 Route::get('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'mostrarFormularioRestablecimiento'])->name('password.reset');
 Route::post('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'restablecerContrasena'])->name('password.update');
 
-// ===============================
 // RUTAS PARA USUARIO
-// ===============================
+
 Route::get('/registro/usuario', fn() => view('register-user'))->name('register.user');
 // Procesar registro de usuario
 Route::post('/registro/usuario', [App\Http\Controllers\UsuarioController::class, 'store'])->name('register.user.process');
-Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('inicio.usuario');
+Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('dashboard.user');
 
-// ===============================
+
 // RUTAS PARA HISTORIAS
-// ===============================
+
 Route::get('/historias', fn() => view('historias'))->name('historias');
 Route::get('/historias', [HistoriaController::class, 'index'])->name('historias');
 Route::get('/historias/mas', [HistoriaController::class, 'mas'])->name('historias.mas');
 Route::get('/historias/enviar', [HistoriaController::class, 'showForm'])->name('historias.enviar');
 Route::post('/historias', [HistoriaController::class, 'store'])->name('historias.store');
 
-// ===============================
+
 // RUTAS PARA PSICÓLOGO
-// ===============================
+
+
 Route::get('/dashboard/psicologo', [PsicologoController::class, 'dashboard'])->name('dashboard.psychologist');
 
 // Submódulos de psicólogo (protegidos por auth.psychologist)
 Route::middleware(['auth.psychologist'])->group(function () {
+    // Reportes de usuario
     Route::get('/psychologist/casos-reportados', 'App\Http\Controllers\ReporteController@index')->name('psychologist.reporte');
     Route::post('/psychologist/reporte/{id}/cerrar', 'App\Http\Controllers\ReporteController@cerrarReporte')->name('psychologist.reporte.cerrar');
     Route::get('/psychologist/chat-apoyo', 'App\Http\Controllers\ChatController@index')->name('psychologist.chat');
@@ -87,9 +87,9 @@ Route::middleware(['auth.psychologist'])->group(function () {
     Route::delete('/psicologos/{id}', [PsicologoController::class, 'destroy'])->name('psicologos.destroy');
 });
 
-// ===============================
+
 // RUTAS PARA ADMINISTRADOR
-// ===============================
+
 Route::prefix('administrador')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('administrador.dashboard');
 
@@ -122,11 +122,11 @@ Route::prefix('administrador')->group(function () {
 // Ruta pública para descargar recursos
 Route::get('/recursos/descargar/{id}', [RecursoController::class, 'download'])->name('recursos.download');
 
-// ===============================
+
 // RUTAS PROTEGIDAS PARA USUARIO
-// ===============================
+
 Route::middleware(['auth.usuario'])->group(function () {
-    Route::get('/dashboard/usuario', [UsuarioController::class, 'inicio'])->name('inicio.usuario');
+    // Formulario con tipos de violencia desde BD
     Route::get('/reporte', function() {
         $tiposViolencia = TipoViolencia::all();
         return view('reporte', compact('tiposViolencia'));
@@ -149,9 +149,9 @@ Route::middleware(['auth.usuario'])->group(function () {
 });
 
 
-// ===============================
+
 // RUTAS DE CHAT PARA USUARIO
-// ===============================
+
 Route::middleware(['auth.usuario'])->group(function () {
     Route::get('/chat', [ChatController::class, 'mostrarChat'])->name('chat');
     Route::post('/chat/enviar', [ChatController::class, 'enviarMensaje'])->name('chat.enviar');
@@ -159,9 +159,9 @@ Route::middleware(['auth.usuario'])->group(function () {
     Route::post('/chat/finalizar', [ChatController::class, 'finalizarChat'])->name('chat.finalizar');
 });
 
-// ===============================
+
 // RUTAS DE CHAT PARA PSICÓLOGO
-// ===============================
+
 Route::middleware(['auth.psychologist'])->group(function () {
     Route::get('/psychologist/chat-apoyo', [ChatController::class, 'index'])->name('psychologist.chat');
     Route::get('/psychologist/chat/{id}', [ChatController::class, 'verChat'])->name('psychologist.chat.ver');

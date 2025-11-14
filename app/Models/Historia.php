@@ -6,28 +6,40 @@ use Illuminate\Database\Eloquent\Model;
 
 class Historia extends Model
 {
-    protected $table = 'historias';
-    protected $fillable = ['contenido', 'anonimo', 'usuario_id', 'estado', 'moderador_id', 'fecha_moderacion', 'motivo_rechazo'];
+    protected $table = 'historia';
+    protected $primaryKey = 'id_historia';
+    public $timestamps = true;
+    
+    protected $fillable = [
+        'contenido', 
+        'fk_usuario', 
+        'anonimo',
+        'estado', 
+        'fk_moderador', 
+        'fecha_moderacion', 
+        'motivo_rechazo'
+    ];
+
+    protected $casts = [
+        'fecha' => 'date',
+        'fecha_moderacion' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
 
     public function usuario()
     {
-        return $this->belongsTo(Usuario::class, 'usuario_id', 'id_usuario');
+        return $this->belongsTo(Usuario::class, 'fk_usuario', 'id_usuario');
     }
 
     public function moderador()
     {
-        return $this->belongsTo(Administrador::class, 'moderador_id', 'id_admin');
+        return $this->belongsTo(Administrador::class, 'fk_moderador', 'id_admin');
     }
 
-    // Scope para historias aprobadas
-    public function scopeAprobadas($query)
+    // Compatibilidad con blades que usan $historia->id
+    public function getIdAttribute()
     {
-        return $query->where('estado', 'aprobada');
-    }
-
-    // Scope para historias pendientes
-    public function scopePendientes($query)
-    {
-        return $query->where('estado', 'pendiente');
+        return $this->id_historia;
     }
 }
