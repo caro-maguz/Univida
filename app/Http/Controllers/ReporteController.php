@@ -7,6 +7,7 @@ use App\Models\Reporte;
 use App\Models\Psicologo;
 use App\Models\TipoViolencia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ReporteController extends Controller
 {
@@ -27,12 +28,21 @@ class ReporteController extends Controller
     // Listar reportes para psicólogo
     public function index()
     {
-        // Mostrar todos los reportes sin filtrar por sesión de psicólogo.
-        $reportes = Reporte::with(['usuario', 'tipoViolencia'])
+        // Opción 1: Usar vista de la BD para obtener información completa
+        $reportes = DB::table('vista_estado_reportes')
             ->orderBy('fecha', 'desc')
             ->get();
 
         return view('psychologist.reporte', compact('reportes'));
+    }
+    
+    // Método adicional: Obtener reportes recientes
+    public function reportesRecientes()
+    {
+        // Usar vista para reportes de últimos 30 días
+        $reportes = DB::table('vista_reportes_recientes')->get();
+        
+        return response()->json($reportes);
     }
 
 
@@ -45,23 +55,50 @@ class ReporteController extends Controller
             'fk_tipo_violencia' => 'required|integer',
             'fecha' => 'nullable|date'
         ]);
-        // Asignar psicólogo disponible (primer psicólogo disponible)
-        $psicologo = Psicologo::where('disponible', true)->first();
-
+        
         // Forzar anonimato en todos los reportes. Si el usuario está autenticado, vincular el alias (fk_usuario).
         $fkUsuario = session('id') ?? (auth()->user()->id_usuario ?? null);
-        // Crear el reporte
-        $reporte = Reporte::create([
-            'fecha' => $request->fecha ? $request->fecha : now(),
-            'descripcion' => $request->descripcion,
-            'anonimo' => 1,
-            'fk_tipo_violencia' => $request->fk_tipo_violencia,
-            'fk_usuario' => $fkUsuario,
-            'fk_psicologo' => $psicologo ? $psicologo->id_psicologo : null,
-            'estado' => 'nuevo',
-        ]);
-        // Redirigir con mensaje de éxito
-        return redirect()->back()->with('success', 'Reporte enviado con éxito');
+        
+        // Opción 1: Usar procedimiento almacenado (con validaciones en BD)
+        try {
+            DB::statement('CALL crear_reporte(?, ?, ?, ?, @id, @msg)', [
+                $request->descripcion,
+                true, // anonimo
+                $fkUsuario,
+                $request->fk_tipo_violencia
+            ]);
+            
+            $resultado = DB::select('SELECT @id as id_reporte, @msg as mensaje');
+            
+            if ($resultado[0]->id_reporte) {
+                // Asignar psicólogo disponible después de crear el reporte
+                $psicologo = Psicologo::where('disponible', true)->first();
+                if ($psicologo) {
+                    Reporte::where('id_reporte', $resultado[0]->id_reporte)
+                        ->update(['fk_psicologo' => $psicologo->id_psicologo]);
+                }
+                
+                return redirect()->back()->with('success', $resultado[0]->mensaje);
+            } else {
+                return redirect()->back()->with('error', $resultado[0]->mensaje);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error al crear reporte con procedimiento: ' . $e->getMessage());
+            
+            // Fallback: Método tradicional si falla el procedimiento
+            $psicologo = Psicologo::where('disponible', true)->first();
+            $reporte = Reporte::create([
+                'fecha' => $request->fecha ? $request->fecha : now(),
+                'descripcion' => $request->descripcion,
+                'anonimo' => 1,
+                'fk_tipo_violencia' => $request->fk_tipo_violencia,
+                'fk_usuario' => $fkUsuario,
+                'fk_psicologo' => $psicologo ? $psicologo->id_psicologo : null,
+                'estado' => 'nuevo',
+            ]);
+            
+            return redirect()->back()->with('success', 'Reporte enviado con éxito');
+        }
     }
 
     // Marcar reporte como cerrado (resuelto)

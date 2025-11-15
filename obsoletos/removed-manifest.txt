@@ -1,0 +1,5 @@
+resources/views/login-psychologist.blade.php
+resources/views/login-admin.blade.php
+resources/views/resources.blade.php
+database/update_preguntas.sql
+database/fix_encoding.sql

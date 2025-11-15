@@ -77,6 +77,12 @@ Route::middleware(['auth.psychologist'])->group(function () {
 Route::get('/psychologist/recursos-profesionales', [RecursoController::class, 'index'])->name('psychologist.resources');
 Route::get('/psychologist/reportes-estadisticos', [EstadisticaController::class, 'index'])->name('psychologist.estadisticos');
 
+// Nuevas rutas para funcionalidades avanzadas de BD
+Route::middleware(['auth.psychologist'])->group(function () {
+    Route::get('/psychologist/estadisticas-fecha', [EstadisticaController::class, 'estadisticasPorFecha'])->name('psychologist.estadisticas.fecha');
+    Route::get('/psychologist/reportes-recientes', [ReporteController::class, 'reportesRecientes'])->name('psychologist.reportes.recientes');
+});
+
 // CRUD de Psicólogos (protegido)
 Route::middleware(['auth.psychologist'])->group(function () {
     Route::get('/psicologos', [PsicologoController::class, 'index'])->name('psicologos.index');

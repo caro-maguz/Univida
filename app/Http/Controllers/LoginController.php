@@ -44,6 +44,18 @@ class LoginController extends Controller
         $correo = $request->correo;
         $contrasena = $request->contrasena;
 
+        // Validar correo institucional usando función de BD
+        $esInstitucional = DB::selectOne('SELECT validar_correo_institucional(?) as valido', [$correo]);
+        if (!$esInstitucional->valido) {
+            return back()->withErrors(['login_error' => 'Debes usar un correo institucional @uniautonoma.edu.co']);
+        }
+
+        // Verificar si el correo ya está registrado usando función de BD
+        $correoExiste = DB::selectOne('SELECT correo_ya_registrado(?) as existe', [$correo]);
+        if (!$correoExiste->existe) {
+            return back()->withErrors(['login_error' => 'El correo no está registrado']);
+        }
+
         // Buscar en las tres tablas
         $usuario = DB::table('usuario')->where('correo', $correo)->first();
         $psicologo = DB::table('psicologo')->where('correo', $correo)->first();

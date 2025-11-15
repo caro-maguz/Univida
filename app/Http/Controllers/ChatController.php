@@ -140,12 +140,14 @@ class ChatController extends Controller
             ->first();
 
         if ($chat) {
-            $chat->update([
-                'estado' => 'cerrado',
-                'fecha_fin' => now()
+            // Usar procedimiento almacenado para cerrar el chat
+            DB::statement('CALL cerrar_chat(?, @msg)', [$chatId]);
+            $resultado = DB::select('SELECT @msg as mensaje');
+            
+            return response()->json([
+                'success' => true,
+                'mensaje' => $resultado[0]->mensaje
             ]);
-
-            return response()->json(['success' => true]);
         }
 
         return response()->json(['error' => 'Chat no encontrado'], 404);
