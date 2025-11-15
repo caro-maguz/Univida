@@ -23,9 +23,9 @@ class ChatController extends Controller
             // En el LoginController la sesión guarda el id común en la clave 'id'
             $usuarioId = session('id');
 
-        // Obtener o crear chat activo para el usuario
+        // Obtener solo chat activo para el usuario (excluir cerrados)
         $chat = Chat::where('fk_usuario', $usuarioId)
-            ->whereIn('estado', ['activo', 'cerrado'])
+            ->where('estado', 'activo')
             ->first();
 
         if (!$chat) {

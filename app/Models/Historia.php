@@ -34,7 +34,7 @@ class Historia extends Model
 
     public function moderador()
     {
-        return $this->belongsTo(Administrador::class, 'fk_moderador', 'id_admin');
+        return $this->belongsTo(Psicologo::class, 'fk_moderador', 'id_psicologo');
     }
 
     // Compatibilidad con blades que usan $historia->id

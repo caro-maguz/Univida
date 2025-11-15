@@ -115,14 +115,18 @@ Route::prefix('administrador')->group(function () {
     Route::put('/recursos/{id}', [RecursoController::class, 'update'])->name('administrador.recursos.update');
     Route::delete('/recursos/{id}', [RecursoController::class, 'destroy'])->name('administrador.recursos.destroy');
 
-    // Gestión de historias (moderación)
-    Route::get('/historias', [App\Http\Controllers\AdminHistoriaController::class, 'index'])->name('administrador.historias.index');
-    Route::get('/historias/{id}', [App\Http\Controllers\AdminHistoriaController::class, 'show'])->name('administrador.historias.show');
-    Route::post('/historias/{id}/aprobar', [App\Http\Controllers\AdminHistoriaController::class, 'aprobar'])->name('administrador.historias.aprobar');
-    Route::post('/historias/{id}/rechazar', [App\Http\Controllers\AdminHistoriaController::class, 'rechazar'])->name('administrador.historias.rechazar');
-    Route::get('/historias/{id}/editar', [App\Http\Controllers\AdminHistoriaController::class, 'edit'])->name('administrador.historias.edit');
-    Route::put('/historias/{id}', [App\Http\Controllers\AdminHistoriaController::class, 'update'])->name('administrador.historias.update');
-    Route::delete('/historias/{id}', [App\Http\Controllers\AdminHistoriaController::class, 'destroy'])->name('administrador.historias.destroy');
+});
+
+// GESTIÓN DE HISTORIAS (MODERACIÓN - PSICÓLOGO)
+
+Route::middleware(['auth.psychologist'])->prefix('psychologist')->group(function () {
+    Route::get('/historias', [App\Http\Controllers\PsicologoHistoriaController::class, 'index'])->name('psychologist.historias.index');
+    Route::get('/historias/{id}', [App\Http\Controllers\PsicologoHistoriaController::class, 'show'])->name('psychologist.historias.show');
+    Route::post('/historias/{id}/aprobar', [App\Http\Controllers\PsicologoHistoriaController::class, 'aprobar'])->name('psychologist.historias.aprobar');
+    Route::post('/historias/{id}/rechazar', [App\Http\Controllers\PsicologoHistoriaController::class, 'rechazar'])->name('psychologist.historias.rechazar');
+    Route::get('/historias/{id}/editar', [App\Http\Controllers\PsicologoHistoriaController::class, 'edit'])->name('psychologist.historias.edit');
+    Route::put('/historias/{id}', [App\Http\Controllers\PsicologoHistoriaController::class, 'update'])->name('psychologist.historias.update');
+    Route::delete('/historias/{id}', [App\Http\Controllers\PsicologoHistoriaController::class, 'destroy'])->name('psychologist.historias.destroy');
 });
 
 // Ruta pública para descargar recursos

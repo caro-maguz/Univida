@@ -46,15 +46,6 @@
       <a href="<?php echo e(route('administrador.recursos.index')); ?>" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg">
         <i class="fas fa-book mr-2"></i> Recursos
       </a>
-      <a href="<?php echo e(route('administrador.historias.index')); ?>" class="block w-full text-left p-2 hover:bg-blue-600 rounded-lg relative">
-        <i class="fas fa-comments mr-2"></i> Historias
-        <?php if(isset($historiasPendientes) && $historiasPendientes > 0): ?>
-          <span class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
-            <?php echo e($historiasPendientes); ?>
-
-          </span>
-        <?php endif; ?>
-      </a>
     </nav>
     <div class="absolute bottom-0 w-full p-4 border-t border-blue-400">
     <form action="<?php echo e(route('logout.admin')); ?>" method="POST">
@@ -81,11 +72,11 @@
           <p class="text-gray-600 text-sm">Psicólogos registrados</p>
           <p class="text-3xl font-bold mt-2 text-unividaBlue"><?php echo e($psicologos->count()); ?></p>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-yellow-500">
-          <p class="text-gray-600 text-sm">Historias pendientes</p>
-          <p class="text-3xl font-bold mt-2 text-yellow-600"><?php echo e($historiasPendientes ?? 0); ?></p>
-          <a href="<?php echo e(route('administrador.historias.index')); ?>" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
-            Ver historias →
+        <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-green-500">
+          <p class="text-gray-600 text-sm">Recursos disponibles</p>
+          <p class="text-3xl font-bold mt-2 text-green-600"><?php echo e($recursos ?? 0); ?></p>
+          <a href="<?php echo e(route('administrador.recursos.index')); ?>" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
+            Ver recursos →
           </a>
         </div>
       </div>
