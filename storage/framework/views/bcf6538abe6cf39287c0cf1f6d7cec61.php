@@ -440,16 +440,16 @@
     <div class="case-card" tabindex="0" role="button"
   data-id="R<?php echo e($r->id_reporte ?? $r->id ?? $loop->index); ?>"
   data-reporte-id="<?php echo e($r->id_reporte ?? $r->id ?? $loop->index); ?>"
-        data-usuario-id="<?php echo e($r->fk_usuario ?? optional($r->usuario)->id_usuario ?? ''); ?>"
-      data-nombre="<?php echo e(optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido')); ?>"
+        data-usuario-id="<?php echo e($r->fk_usuario ?? ''); ?>"
+      data-nombre="<?php echo e($r->nombre_usuario ?? ($r->anonimo ? 'Anónimo' : 'Desconocido')); ?>"
       data-fecha="<?php echo e($r->fecha); ?>"
       data-urgencia="media"
       data-estado="<?php echo e($r->estado ?? 'nuevo'); ?>"
-      data-detalles="<?php echo e($r->descripcion); ?>">
+      data-detalles="<?php echo e($r->descripcion ?? ''); ?>">
             <div class="case-header">
               <div>
-                <div class="case-name"><?php echo e(optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido')); ?></div>
-                <div class="case-id">R<?php echo e($r->id ?? $loop->index); ?></div>
+                <div class="case-name"><?php echo e($r->nombre_usuario ?? ($r->anonimo ? 'Anónimo' : 'Desconocido')); ?></div>
+                <div class="case-id">R<?php echo e($r->id_reporte ?? $loop->index); ?></div>
               </div>
               <span class="urgency-badge urgency-media">Media</span>
             </div>

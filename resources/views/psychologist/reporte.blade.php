@@ -440,16 +440,16 @@
     <div class="case-card" tabindex="0" role="button"
   data-id="R{{ $r->id_reporte ?? $r->id ?? $loop->index }}"
   data-reporte-id="{{ $r->id_reporte ?? $r->id ?? $loop->index }}"
-        data-usuario-id="{{ $r->fk_usuario ?? optional($r->usuario)->id_usuario ?? '' }}"
-      data-nombre="{{ optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}"
+        data-usuario-id="{{ $r->fk_usuario ?? '' }}"
+      data-nombre="{{ $r->nombre_usuario ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}"
       data-fecha="{{ $r->fecha }}"
       data-urgencia="media"
       data-estado="{{ $r->estado ?? 'nuevo' }}"
-      data-detalles="{{ $r->descripcion }}">
+      data-detalles="{{ $r->descripcion ?? '' }}">
             <div class="case-header">
               <div>
-                <div class="case-name">{{ optional($r->usuario)->nombre ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}</div>
-                <div class="case-id">R{{ $r->id ?? $loop->index }}</div>
+                <div class="case-name">{{ $r->nombre_usuario ?? ($r->anonimo ? 'Anónimo' : 'Desconocido') }}</div>
+                <div class="case-id">R{{ $r->id_reporte ?? $loop->index }}</div>
               </div>
               <span class="urgency-badge urgency-media">Media</span>
             </div>

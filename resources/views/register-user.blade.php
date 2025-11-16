@@ -146,12 +146,18 @@
       @csrf
       <div class="form-group">
         <label for="alias">Alias / Nombre de usuario</label>
-        <input type="text" id="alias" name="alias" placeholder="Ej: Juan123" required minlength="3">
+        <input type="text" id="alias" name="alias" placeholder="Ej: Juan123" value="{{ old('alias') }}" required minlength="3">
+        @error('alias')
+          <span style="color: #c33; font-size: 0.85rem; display: block; margin-top: 4px;">{{ $message }}</span>
+        @enderror
       </div>
 
       <div class="form-group">
         <label for="correo">Correo institucional</label>
-        <input type="email" id="correo" name="correo" placeholder="usuario@uniautonoma.edu.co" required>
+        <input type="email" id="correo" name="correo" placeholder="usuario@uniautonoma.edu.co" value="{{ old('correo') }}" required>
+        @error('correo')
+          <span style="color: #c33; font-size: 0.85rem; display: block; margin-top: 4px;">{{ $message }}</span>
+        @enderror
       </div>
 
       <div class="form-group">
@@ -160,6 +166,9 @@
         <button type="button" class="toggle-password" onclick="togglePassword()">
           <span id="eyeIcon">👁️</span>
         </button>
+        @error('password')
+          <span style="color: #c33; font-size: 0.85rem; display: block; margin-top: 4px;">{{ $message }}</span>
+        @enderror
       </div>
 
       <button type="submit" class="registro-button">Completar Registro</button>

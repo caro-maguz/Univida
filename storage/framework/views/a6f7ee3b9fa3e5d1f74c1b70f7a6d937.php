@@ -146,12 +146,32 @@
       <?php echo csrf_field(); ?>
       <div class="form-group">
         <label for="alias">Alias / Nombre de usuario</label>
-        <input type="text" id="alias" name="alias" placeholder="Ej: Juan123" required minlength="3">
+        <input type="text" id="alias" name="alias" placeholder="Ej: Juan123" value="<?php echo e(old('alias')); ?>" required minlength="3">
+        <?php $__errorArgs = ['alias'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+          <span style="color: #c33; font-size: 0.85rem; display: block; margin-top: 4px;"><?php echo e($message); ?></span>
+        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
       </div>
 
       <div class="form-group">
         <label for="correo">Correo institucional</label>
-        <input type="email" id="correo" name="correo" placeholder="usuario@uniautonoma.edu.co" required>
+        <input type="email" id="correo" name="correo" placeholder="usuario@uniautonoma.edu.co" value="<?php echo e(old('correo')); ?>" required>
+        <?php $__errorArgs = ['correo'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+          <span style="color: #c33; font-size: 0.85rem; display: block; margin-top: 4px;"><?php echo e($message); ?></span>
+        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
       </div>
 
       <div class="form-group">
@@ -160,6 +180,16 @@
         <button type="button" class="toggle-password" onclick="togglePassword()">
           <span id="eyeIcon">👁️</span>
         </button>
+        <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+          <span style="color: #c33; font-size: 0.85rem; display: block; margin-top: 4px;"><?php echo e($message); ?></span>
+        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
       </div>
 
       <button type="submit" class="registro-button">Completar Registro</button>

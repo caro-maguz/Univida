@@ -53,9 +53,8 @@ END$$
 DELIMITER ;
 
 
--- ============================================================================
 -- PASO 3: PROCEDIMIENTOS ALMACENADOS
--- ============================================================================
+
 
 -- Eliminar procedimientos si existen
 DROP PROCEDURE IF EXISTS crear_reporte;
@@ -152,9 +151,8 @@ END$$
 DELIMITER ;
 
 
--- ============================================================================
 -- PASO 4: TRIGGERS (DISPARADORES)
--- ============================================================================
+
 
 -- Eliminar triggers si existen
 DROP TRIGGER IF EXISTS validar_fecha_reporte_before_insert;
@@ -200,9 +198,8 @@ END$$
 DELIMITER ;
 
 
--- ============================================================================
 -- PASO 5: VISTAS
--- ============================================================================
+
 
 -- Eliminar vistas si existen
 DROP VIEW IF EXISTS vista_estado_reportes;
@@ -213,8 +210,10 @@ CREATE VIEW vista_estado_reportes AS
 SELECT 
     r.id_reporte,
     r.fecha,
+    r.descripcion,
     r.estado,
     r.anonimo,
+    r.fk_usuario,
     u.nombre AS nombre_usuario,
     u.correo AS correo_usuario,
     tv.nombre AS tipo_violencia,
@@ -244,9 +243,8 @@ WHERE r.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
 ORDER BY r.fecha DESC;
 
 
--- ============================================================================
 -- VERIFICACIÓN FINAL
--- ============================================================================
+
 
 SELECT '========================================' AS '';
 SELECT 'IMPLEMENTACIÓN COMPLETADA' AS '';
