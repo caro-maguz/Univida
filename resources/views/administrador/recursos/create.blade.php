@@ -55,7 +55,7 @@
       @error('enlace')<div class="error">{{ $message }}</div>@enderror
     </div>
     <div class="group">
-      <label for="archivo">Archivo (opcional)</label>
+      <label for="archivo">Archivo</label>
       <input type="file" id="archivo" name="archivo" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx">
       @error('archivo')<div class="error">{{ $message }}</div>@enderror
     </div>

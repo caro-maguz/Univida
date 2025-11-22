@@ -83,7 +83,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
     </div>
     <div class="group">
-      <label for="archivo">Archivo (opcional)</label>
+      <label for="archivo">Archivo</label>
       <input type="file" id="archivo" name="archivo" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx">
       <?php $__errorArgs = ['archivo'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

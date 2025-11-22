@@ -422,12 +422,6 @@
         <button class="filter-btn" data-filter="nuevo">
           <i class="fas fa-inbox"></i> Nuevo
         </button>
-        <button class="filter-btn" data-filter="proceso">
-          <i class="fas fa-sync-alt"></i> En proceso
-        </button>
-        <button class="filter-btn" data-filter="urgente">
-          <i class="fas fa-exclamation-circle"></i> Urgente
-        </button>
         <button class="filter-btn" data-filter="cerrado">
           <i class="fas fa-check-circle"></i> Cerrado
         </button>

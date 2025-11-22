@@ -384,6 +384,50 @@ END$$
 DELIMITER ;
 
 
+-- Validar correo institucional al registrar/actualizar usuarios
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS validar_correo_usuario_bi $$
+CREATE TRIGGER validar_correo_usuario_bi
+BEFORE INSERT ON usuario
+FOR EACH ROW
+BEGIN
+    IF NEW.correo IS NULL OR TRIM(NEW.correo) = '' THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El correo es obligatorio';
+    END IF;
+
+    IF NOT validar_correo_institucional(NEW.correo) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Debes usar un correo institucional (@uniautonoma.edu.co)';
+    END IF;
+
+    IF correo_ya_registrado(NEW.correo) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Este correo ya está registrado';
+    END IF;
+END $$
+
+DROP TRIGGER IF EXISTS validar_correo_usuario_bu $$
+CREATE TRIGGER validar_correo_usuario_bu
+BEFORE UPDATE ON usuario
+FOR EACH ROW
+BEGIN
+    IF NEW.correo IS NOT NULL AND NEW.correo <> OLD.correo THEN
+        IF NOT validar_correo_institucional(NEW.correo) THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Debes usar un correo institucional (@uniautonoma.edu.co)';
+        END IF;
+
+        IF correo_ya_registrado(NEW.correo) THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Este correo ya está registrado';
+        END IF;
+    END IF;
+END $$
+
+DELIMITER ;
+
 -- VISTAS
 
 
