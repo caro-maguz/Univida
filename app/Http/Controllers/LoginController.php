@@ -68,8 +68,19 @@ class LoginController extends Controller
                 'usuario_id' => $usuario->id_usuario,
                 'nombre' => $usuario->nombre
             ]);
-            return redirect()->route('dashboard.user');
+            return redirect()->route('menu');
+
         }
+        /*
+        if ($usuario && Hash::check($contrasena, $usuario->contrasena)) {
+            session([
+                'rol' => 'usuario', 
+                'id' => $usuario->id_usuario,
+                'usuario_id' => $usuario->id_usuario,
+                'nombre' => $usuario->nombre
+            ]);
+            return redirect()->route('dashboard.user');
+        }*/
 
         if ($psicologo && Hash::check($contrasena, $psicologo->contrasena)) {
             session([

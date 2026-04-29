@@ -13,8 +13,10 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\HistoriaController;
 
 
-// PÁGINAS PRINCIPALES Y BÁSICAS
 
+
+
+// PÁGINAS PRINCIPALES Y BÁSICAS
 Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('/rol', fn() => view('rol'))->name('rol');
 Route::get('/acerca', fn() => view('about'))->name('about');
@@ -178,4 +180,16 @@ Route::middleware(['auth.psychologist'])->group(function () {
     Route::post('/psychologist/chat/tomar', [ChatController::class, 'tomarChat'])->name('psychologist.chat.tomar');
     Route::post('/psychologist/chat/abrir', [ChatController::class, 'abrirChatParaUsuario'])->name('psychologist.chat.abrir');
     Route::post('/psychologist/chat/enviar', [ChatController::class, 'psicologoEnviarMensaje'])->name('psychologist.chat.enviar');
+});
+
+
+
+
+
+
+// CAMBIOS NUEVOS 
+
+// Seleccion de RUTA  
+Route::middleware(['auth.usuario'])->group(function () {
+    Route::get('/seleccion-ruta', fn() => view('seleccion-ruta'))->name('menu');
 });
