@@ -7,143 +7,43 @@ use Illuminate\Support\Facades\DB;
 
 class PreguntaTestSeeder extends Seeder
 {
-    /**
-     * Seed de preguntas mejorado para el test de evaluación emocional
-     * Incluye preguntas específicas para cada tipo de violencia en la BD:
-     * - Violencia Psicológica
-     * - Violencia Sexual
-     * - Violencia Económica
-     * - Violencia Emocional
-     * - Violencia Física
-     */
     public function run()
     {
-        // Limpiar preguntas existentes (desactivar foreign keys temporalmente)
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('respuesta_test')->truncate();
-        DB::table('pregunta_test')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // Borrar datos sin TRUNCATE (respeta las FK)
+        DB::table('respuesta_test')->delete();
+        DB::table('pregunta_test')->delete();
 
-        // Banco de preguntas organizadas por tipo de violencia
-        // FORMATO: Sí/No con peso para cada pregunta
+        // Nuevas preguntas
         $preguntas = [
-            // ========================================
-            // VIOLENCIA PSICOLÓGICA (4 preguntas)
-            // ========================================
-            [
-                'enunciado' => '¿Alguien en tu entorno te insulta, humilla o ridiculiza constantemente?',
-                'categoria' => 'Psicológica'
-            ],
-            [
-                'enunciado' => '¿Has recibido comentarios que te hacen sentir inferior, incapaz o sin valor?',
-                'categoria' => 'Psicológica'
-            ],
-            [
-                'enunciado' => '¿Has sido amenazado/a o intimidado/a por alguien cercano?',
-                'categoria' => 'Psicológica'
-            ],
-            [
-                'enunciado' => '¿Te hacen sentir culpable por cosas que no son tu responsabilidad?',
-                'categoria' => 'Psicológica'
-            ],
+            ['id_pregunta' => 1,  'enunciado' => '¿Has sentido incomodidad o miedo hacia alguna persona dentro del entorno universitario?'],
+            ['id_pregunta' => 2,  'enunciado' => '¿Alguien te ha hecho comentarios sobre tu cuerpo, apariencia o vida personal que te resultaron incómodos?'],
+            ['id_pregunta' => 3,  'enunciado' => '¿Has recibido mensajes, llamadas o contactos insistentes que no deseas?'],
+            ['id_pregunta' => 4,  'enunciado' => '¿Alguien ha invadido tu espacio personal sin tu consentimiento?'],
 
-            // ========================================
-            // VIOLENCIA EMOCIONAL (4 preguntas)
-            // ========================================
-            [
-                'enunciado' => '¿Te han alejado de tus amigos, familia o personas importantes para ti?',
-                'categoria' => 'Emocional'
-            ],
-            [
-                'enunciado' => '¿Alguien controla excesivamente tus actividades, decisiones o forma de vestir?',
-                'categoria' => 'Emocional'
-            ],
-            [
-                'enunciado' => '¿Invaden tu privacidad revisando tus pertenencias, mensajes o redes sociales sin permiso?',
-                'categoria' => 'Emocional'
-            ],
-            [
-                'enunciado' => '¿Sientes miedo constante de expresar tus opiniones o hacer enojar a alguien?',
-                'categoria' => 'Emocional'
-            ],
+            ['id_pregunta' => 5,  'enunciado' => '¿Has sido objeto de insultos, burlas o humillaciones relacionadas con tu género?'],
+            ['id_pregunta' => 6,  'enunciado' => '¿Alguien ha intentado controlarte (amistades, forma de vestir, actividades)?'],
+            ['id_pregunta' => 7,  'enunciado' => '¿Has sido amenazado/a directa o indirectamente?'],
 
-            // ========================================
-            // VIOLENCIA FÍSICA (4 preguntas)
-            // ========================================
-            [
-                'enunciado' => '¿Has recibido empujones, jalones, sacudidas o agarrones violentos?',
-                'categoria' => 'Física'
-            ],
-            [
-                'enunciado' => '¿Has sido golpeado/a, abofeteado/a o agredido/a físicamente?',
-                'categoria' => 'Física'
-            ],
-            [
-                'enunciado' => '¿Han destruido o lanzado objetos cerca de ti para intimidarte?',
-                'categoria' => 'Física'
-            ],
-            [
-                'enunciado' => '¿Te han impedido salir, te han encerrado o bloqueado el paso físicamente?',
-                'categoria' => 'Física'
-            ],
+            ['id_pregunta' => 8,  'enunciado' => '¿Has sido empujado/a, golpeado/a o agredido/a físicamente?'],
+            ['id_pregunta' => 9,  'enunciado' => '¿Alguien ha intentado dañarte físicamente dentro o fuera de la universidad?'],
 
-            // ========================================
-            // VIOLENCIA SEXUAL (4 preguntas)
-            // ========================================
-            [
-                'enunciado' => '¿Has sido presionado/a u obligado/a a realizar actos sexuales contra tu voluntad?',
-                'categoria' => 'Sexual'
-            ],
-            [
-                'enunciado' => '¿Has experimentado tocamientos o acercamientos sexuales no deseados?',
-                'categoria' => 'Sexual'
-            ],
-            [
-                'enunciado' => '¿Han ignorado tu negativa o te han hecho sentir culpable por no acceder a demandas sexuales?',
-                'categoria' => 'Sexual'
-            ],
-            [
-                'enunciado' => '¿Has recibido comentarios ofensivos, humillantes o acoso de índole sexual?',
-                'categoria' => 'Sexual'
-            ],
+            ['id_pregunta' => 10, 'enunciado' => '¿Has recibido insinuaciones sexuales no deseadas?'],
+            ['id_pregunta' => 11, 'enunciado' => '¿Alguien ha tocado tu cuerpo sin tu consentimiento?'],
+            ['id_pregunta' => 12, 'enunciado' => '¿Te has sentido presionado/a para realizar actos sexuales?'],
 
-            // ========================================
-            // VIOLENCIA ECONÓMICA (4 preguntas)
-            // ========================================
-            [
-                'enunciado' => '¿Alguien controla completamente tus recursos económicos o te exige rendir cuentas de cada gasto?',
-                'categoria' => 'Económica'
-            ],
-            [
-                'enunciado' => '¿Te impiden trabajar, estudiar o desarrollarte profesionalmente?',
-                'categoria' => 'Económica'
-            ],
-            [
-                'enunciado' => '¿Han tomado o usado tu dinero, tarjetas o propiedades sin tu autorización?',
-                'categoria' => 'Económica'
-            ],
-            [
-                'enunciado' => '¿Te niegan recursos para cubrir necesidades básicas como alimentación, salud o educación?',
-                'categoria' => 'Económica'
-            ],
+            ['id_pregunta' => 13, 'enunciado' => '¿Has recibido mensajes ofensivos o amenazas por redes sociales o medios digitales?'],
+            ['id_pregunta' => 14, 'enunciado' => '¿Han difundido información personal, fotos o videos tuyos sin autorización?'],
+
+            ['id_pregunta' => 15, 'enunciado' => '¿La persona involucrada pertenece a la comunidad universitaria (estudiante, docente o administrativo)?'],
+            ['id_pregunta' => 16, 'enunciado' => '¿Los hechos ocurrieron dentro de instalaciones universitarias o en actividades institucionales?'],
+
+            ['id_pregunta' => 17, 'enunciado' => '¿Has informado previamente esta situación a algún canal institucional?'],
+            ['id_pregunta' => 18, 'enunciado' => '¿Deseas recibir orientación o apoyo institucional?'],
+            ['id_pregunta' => 19, 'enunciado' => '¿Te sientes en riesgo actualmente?'],
         ];
 
-        // Insertar preguntas en la base de datos
-        foreach ($preguntas as $pregunta) {
-            DB::table('pregunta_test')->insert([
-                'enunciado' => $pregunta['enunciado'],
-                'fk_test' => null, // Las preguntas son genéricas, no pertenecen a un test específico
-            ]);
-        }
+        DB::table('pregunta_test')->insert($preguntas);
 
-        // Mostrar resumen
-        echo "\n✅ Se han insertado " . count($preguntas) . " preguntas en el test\n";
-        echo "📊 Distribución por tipo:\n";
-        echo "   - Violencia Psicológica: 4 preguntas\n";
-        echo "   - Violencia Emocional: 4 preguntas\n";
-        echo "   - Violencia Física: 4 preguntas\n";
-        echo "   - Violencia Sexual: 4 preguntas\n";
-        echo "   - Violencia Económica: 4 preguntas\n";
-        echo "   TOTAL: 20 preguntas (Sí/No)\n\n";
+        echo "\n✅ Insertadas " . count($preguntas) . " preguntas correctamente.\n";
     }
 }
