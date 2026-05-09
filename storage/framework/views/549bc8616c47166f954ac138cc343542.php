@@ -6,9 +6,10 @@
   <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
   <title>Chat de Apoyo - Univida</title>
   <link rel="icon" type="image/png" href="<?php echo e(asset('img/Logo.png')); ?>">
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
-    
+
     *{
       font-family: 'Delius', cursive;
       margin: 0;
@@ -133,14 +134,11 @@
       box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
 
-    /* Mensajes de sistema especiales (solo línea, sin burbuja) */
     .system-line {
       align-self: center;
       font-size: 0.85rem;
       color: #555;
-      background: none;
       padding: 2px 8px;
-      border-radius: 0;
     }
 
     .message-time {
@@ -188,9 +186,7 @@
     .chat-actions {
       margin-top: 1rem;
       display: flex;
-      gap: 10px;
       justify-content: center;
-      flex-wrap: wrap;
     }
 
     .chat-actions button {
@@ -201,12 +197,6 @@
       color: #d32f2f;
       background: white;
       cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .chat-actions button:hover {
-      background: #d32f2f;
-      color: white;
     }
 
     .estado-chat {
@@ -217,213 +207,302 @@
       font-size: 0.9rem;
     }
 
-    .estado-en-espera {
-      background: #fff3cd;
-      color: #856404;
-    }
-
     .estado-activo {
       background: #d4edda;
       color: #155724;
     }
 
-    @media (max-width: 768px) {
-      .chat-container {
-        flex-direction: column;
-      }
-      .mascota {
-        order: -1;
-      }
+    .estado-en-espera {
+      background: #fff3cd;
+      color: #856404;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <a href="<?php echo e(route('dashboard.user')); ?>">Regresar</a>
-  </header>
 
-  <main>
-    <article class="chat-container">
-      <section class="mascota">
-        <img src="<?php echo e(asset('img/img5.png')); ?>" alt="Mascota Univida sonriente">
-      </section>
+<header>
+  <a href="<?php echo e(route('dashboard.user')); ?>">Regresar</a>
+</header>
 
-      <section class="chat-section">
-        <h2 class="chat-header">Estamos contigo 💙 Tu bienestar importa</h2>
-        
-        <div class="estado-chat <?php echo e($chat->estado === 'activo' ? 'estado-activo' : 'estado-en-espera'); ?>">
-          <?php if($chat->estado === 'en_espera'): ?>
-            ⏳ Esperando a que un profesional se una...
-          <?php elseif($chat->estado === 'activo'): ?>
-            ✅ Conectado con un profesional
-          <?php endif; ?>
-        </div>
-        
-        <div class="messages" id="messages-container" aria-live="polite">
-          <?php $__currentLoopData = $mensajes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mensaje): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php
-              $isSystemConnection = $mensaje->tipo_remitente === 'sistema' && (str_contains($mensaje->mensaje,'se ha unido') || str_contains($mensaje->mensaje,'ha iniciado'));
-            ?>
-            <?php if($isSystemConnection): ?>
-              <div class="system-line" data-mensaje-id="<?php echo e($mensaje->id); ?>"><?php echo e($mensaje->mensaje); ?> · <small><?php echo e($mensaje->created_at->format('H:i')); ?></small></div>
-            <?php else: ?>
-              <div class="message <?php echo e($mensaje->tipo_remitente === 'sistema' ? 'psicologo' : $mensaje->tipo_remitente); ?>" data-mensaje-id="<?php echo e($mensaje->id); ?>">
-                <span><?php echo e($mensaje->mensaje); ?></span>
-                <div class="message-time"><?php echo e($mensaje->created_at->format('H:i')); ?></div>
+<main>
+  <article class="chat-container">
+
+    <section class="mascota">
+      <img src="<?php echo e(asset('img/img5.png')); ?>" alt="Mascota Univida">
+    </section>
+
+    <section class="chat-section">
+
+      <h2 class="chat-header">
+        Estamos contigo 💙 Tu bienestar importa
+      </h2>
+
+      <div class="estado-chat <?php echo e($chat->estado === 'activo' ? 'estado-activo' : 'estado-en-espera'); ?>">
+        <?php if($chat->estado === 'en_espera'): ?>
+          ⏳ Esperando a que un profesional se una...
+        <?php elseif($chat->estado === 'activo'): ?>
+          ✅ Conectado con un profesional
+        <?php endif; ?>
+      </div>
+
+      <div class="messages" id="messages-container">
+
+        <?php $__currentLoopData = $mensajes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mensaje): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+          <?php
+            $textoMensaje = $mensaje->mensaje ?? $mensaje->contenido;
+
+            $isSystemConnection =
+              $mensaje->tipo_remitente === 'sistema' &&
+              (
+                str_contains($textoMensaje, 'se ha unido') ||
+                str_contains($textoMensaje, 'ha iniciado')
+              );
+          ?>
+
+          <?php if($isSystemConnection): ?>
+
+            <div class="system-line" data-mensaje-id="<?php echo e($mensaje->id); ?>">
+              <?php echo e($textoMensaje); ?>
+
+              ·
+              <small>
+                <?php echo e(optional($mensaje->fecha_hora)->format('H:i')); ?>
+
+              </small>
+            </div>
+
+          <?php else: ?>
+
+            <div class="message <?php echo e($mensaje->tipo_remitente === 'sistema' ? 'psicologo' : $mensaje->tipo_remitente); ?>"
+                 data-mensaje-id="<?php echo e($mensaje->id); ?>">
+
+              <span><?php echo e($textoMensaje); ?></span>
+
+              <div class="message-time">
+                <?php echo e(optional($mensaje->fecha_hora)->format('H:i')); ?>
+
               </div>
-            <?php endif; ?>
-          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </div>
 
-        <form class="chat-input" id="chat-form">
-          <?php echo csrf_field(); ?>
-          <input type="hidden" name="chat_id" value="<?php echo e($chat->id); ?>">
-          <input type="text" id="mensaje-input" name="mensaje" placeholder="Escribe tu mensaje..." required maxlength="1000">
-          <button type="submit" id="enviar-btn">Enviar</button>
-        </form>
+            </div>
 
-        <div class="chat-actions">
-          <button onclick="finalizarChat()">Finalizar Chat</button>
-        </div>
-      </section>
-    </article>
-  </main>
+          <?php endif; ?>
 
-  <script>
-    const chatId = <?php echo e($chat->id); ?>;
-    let ultimoMensajeId = <?php echo e($mensajes->last()->id ?? 0); ?>;
-    let polling;
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-    // Configurar CSRF token para todas las peticiones AJAX
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      </div>
 
-    // Scroll automático al último mensaje
-    function scrollToBottom() {
-      const container = document.getElementById('messages-container');
-      container.scrollTop = container.scrollHeight;
-    }
+      <form class="chat-input" id="chat-form">
+        <?php echo csrf_field(); ?>
 
-    // Enviar mensaje
-    document.getElementById('chat-form').addEventListener('submit', async function(e) {
+        <input type="hidden" name="chat_id" value="<?php echo e($chat->id_chat); ?>">
+
+        <input
+          type="text"
+          id="mensaje-input"
+          name="mensaje"
+          placeholder="Escribe tu mensaje..."
+          required
+          maxlength="1000"
+        >
+
+        <button type="submit" id="enviar-btn">
+          Enviar
+        </button>
+      </form>
+
+      <div class="chat-actions">
+        <button onclick="finalizarChat()">
+          Finalizar Chat
+        </button>
+      </div>
+
+    </section>
+
+  </article>
+</main>
+
+<script>
+
+  const chatId = <?php echo e($chat->id_chat); ?>;
+  let ultimoMensajeId = <?php echo e($mensajes->last()->id ?? 0); ?>;
+
+  const csrfToken =
+    document.querySelector('meta[name="csrf-token"]').content;
+
+  function scrollToBottom() {
+    const container = document.getElementById('messages-container');
+    container.scrollTop = container.scrollHeight;
+  }
+
+  document
+    .getElementById('chat-form')
+    .addEventListener('submit', async function(e) {
+
       e.preventDefault();
-      
+
       const input = document.getElementById('mensaje-input');
       const mensaje = input.value.trim();
       const btn = document.getElementById('enviar-btn');
-      
+
       if (!mensaje) return;
-      
+
       btn.disabled = true;
-      
+
       try {
+
         const response = await fetch('<?php echo e(route("chat.enviar")); ?>', {
           method: 'POST',
+
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
           },
+
           body: JSON.stringify({
             chat_id: chatId,
             mensaje: mensaje
           })
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
-          // Agregar mensaje al chat
+
           agregarMensaje(data.mensaje);
+
           input.value = '';
+
           scrollToBottom();
         }
-      } catch (error) {
-        console.error('Error al enviar mensaje:', error);
-        alert('Error al enviar el mensaje. Intenta de nuevo.');
+
+      } catch(error) {
+
+        console.error(error);
+
+        alert('Error al enviar mensaje');
+
       } finally {
+
         btn.disabled = false;
-        input.focus();
+
       }
+
     });
 
-    // Agregar mensaje al DOM
-    function agregarMensaje(mensaje) {
-      const container = document.getElementById('messages-container');
+  function agregarMensaje(mensaje) {
 
-      // Detectar mensajes de sistema de conexión
-      const isSystemConnection = mensaje.tipo_remitente === 'sistema' && (mensaje.mensaje.includes('se ha unido') || mensaje.mensaje.includes('ha iniciado'));
+    const container =
+      document.getElementById('messages-container');
 
-      let div = document.createElement('div');
-      if (isSystemConnection) {
-        div.className = 'system-line';
-        div.setAttribute('data-mensaje-id', mensaje.id);
-        div.textContent = `${mensaje.mensaje} · ${mensaje.created_at}`;
-      } else {
-        const claseBurbuja = mensaje.tipo_remitente === 'sistema' ? 'psicologo' : mensaje.tipo_remitente;
-        div.className = `message ${claseBurbuja}`;
-        div.setAttribute('data-mensaje-id', mensaje.id);
-        div.innerHTML = `
-          <span>${mensaje.mensaje}</span>
-          <div class="message-time">${mensaje.created_at}</div>
-        `;
-      }
+    let div = document.createElement('div');
 
-      container.appendChild(div);
-      ultimoMensajeId = mensaje.id;
+    const esSistema =
+      mensaje.tipo_remitente === 'sistema';
+
+    if (esSistema) {
+
+      div.className = 'system-line';
+
+      div.innerHTML = `
+        ${mensaje.mensaje}
+        ·
+        <small>${mensaje.created_at}</small>
+      `;
+
+    } else {
+
+      div.className =
+        `message ${mensaje.tipo_remitente}`;
+
+      div.innerHTML = `
+        <span>${mensaje.mensaje}</span>
+        <div class="message-time">
+          ${mensaje.created_at}
+        </div>
+      `;
     }
 
-    // Polling para nuevos mensajes
-    async function verificarNuevosMensajes() {
-      try {
-        const response = await fetch(`<?php echo e(route("chat.nuevos")); ?>?chat_id=${chatId}&ultimo_mensaje_id=${ultimoMensajeId}`);
-        const data = await response.json();
-        
-        if (data.mensajes && data.mensajes.length > 0) {
-          data.mensajes.forEach(msg => {
-            agregarMensaje(msg);
-          });
-          scrollToBottom();
-        }
-      } catch (error) {
-        console.error('Error al verificar mensajes:', error);
+    container.appendChild(div);
+
+    ultimoMensajeId = mensaje.id;
+  }
+
+  async function verificarNuevosMensajes() {
+
+    try {
+
+      const response = await fetch(
+        `<?php echo e(route("chat.nuevos")); ?>?chat_id=${chatId}&ultimo_mensaje_id=${ultimoMensajeId}`
+      );
+
+      const data = await response.json();
+
+      if (data.mensajes.length > 0) {
+
+        data.mensajes.forEach(msg => {
+          agregarMensaje(msg);
+        });
+
+        scrollToBottom();
       }
+
+    } catch(error) {
+
+      console.error(error);
+
     }
 
-    // Finalizar chat
-    async function finalizarChat() {
-      if (!confirm('¿Estás seguro de que deseas finalizar este chat?')) {
-        return;
-      }
-      
-      try {
-        const response = await fetch('<?php echo e(route("chat.finalizar")); ?>', {
+  }
+
+  async function finalizarChat() {
+
+    if (!confirm('¿Deseas finalizar el chat?')) {
+      return;
+    }
+
+    try {
+
+      const response = await fetch(
+        '<?php echo e(route("chat.finalizar")); ?>',
+        {
           method: 'POST',
+
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
           },
+
           body: JSON.stringify({
             chat_id: chatId
           })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          clearInterval(polling);
-          alert('Chat finalizado. Gracias por usar nuestro servicio.');
-          window.location.href = '<?php echo e(route("dashboard.user")); ?>';
         }
-      } catch (error) {
-        console.error('Error al finalizar chat:', error);
-        alert('Error al finalizar el chat.');
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+
+        alert('Chat finalizado');
+
+        window.location.href =
+          '<?php echo e(route("dashboard.user")); ?>';
       }
+
+    } catch(error) {
+
+      console.error(error);
+
     }
 
-    // Iniciar polling cada 3 segundos
-    polling = setInterval(verificarNuevosMensajes, 3000);
+  }
 
-    // Scroll inicial
-    scrollToBottom();
-  </script>
+  setInterval(verificarNuevosMensajes, 3000);
+
+  scrollToBottom();
+
+</script>
+
 </body>
 </html><?php /**PATH C:\xampp\htdocs\univida\resources\views/chat.blade.php ENDPATH**/ ?>

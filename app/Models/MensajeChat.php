@@ -10,23 +10,21 @@ class MensajeChat extends Model
     use HasFactory;
 
     protected $table = 'mensaje_chat';
+
     protected $primaryKey = 'id_mensaje';
-    public $timestamps = true;
+
+    // TU TABLA NO TIENE created_at NI updated_at
+    public $timestamps = false;
 
     protected $fillable = [
         'fk_chat',
         'contenido',
         'emisor',
-        'tipo_remitente',
-        'fecha_hora',
-        'leido'
+        'fecha_hora'
     ];
 
     protected $casts = [
-        'fecha_hora' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'leido' => 'boolean'
+        'fecha_hora' => 'datetime'
     ];
 
     // Compatibilidad con vistas que usan 'mensaje' e 'id'
