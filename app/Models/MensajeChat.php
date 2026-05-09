@@ -14,7 +14,7 @@ class MensajeChat extends Model
     protected $primaryKey = 'id_mensaje';
 
     // TU TABLA NO TIENE created_at NI updated_at
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'fk_chat',
@@ -24,7 +24,8 @@ class MensajeChat extends Model
     ];
 
     protected $casts = [
-        'fecha_hora' => 'datetime'
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
     ];
 
     // Compatibilidad con vistas que usan 'mensaje' e 'id'

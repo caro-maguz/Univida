@@ -104,8 +104,24 @@ Route::middleware(['auth.usuario'])->group(function () {
 | PSICÓLOGO
 |--------------------------------------------------------------------------
 */
-Route::get('/dashboard/psicologo', [PsicologoController::class, 'dashboard'])->name('dashboard.psychologist');
+Route::middleware(['auth.psychologist'])->group(function () {
 
+    Route::get('/recursos-profesionales', [PsicologoController::class, 'recursos'])
+        ->name('psychologist.resources');
+
+    Route::get('/psychologist/estadisticos', [PsicologoController::class, 'estadisticos'])
+        ->name('psychologist.estadisticos');
+
+});
+Route::middleware(['auth.psychologist'])->group(function () {
+    Route::get('/psychologist/historias/moderar', [HistoriaController::class, 'moderar'])
+        ->name('psychologist.historias.moderar');
+});
+Route::get('/dashboard/psicologo', [PsicologoController::class, 'dashboard'])->name('dashboard.psychologist');
+Route::prefix('psychologist')->middleware('auth.psychologist')->group(function () {
+    Route::get('/recursos', [PsicologoController::class, 'recursos']);
+    Route::get('/estadisticos', [PsicologoController::class, 'estadisticos']);
+});
 Route::middleware(['auth.psychologist'])->group(function () {
 
     Route::get('/psychologist/casos-reportados', [ReporteController::class, 'index'])->name('psychologist.reporte');

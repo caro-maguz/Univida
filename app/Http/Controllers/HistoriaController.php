@@ -62,4 +62,12 @@ class HistoriaController extends Controller
 
         return redirect()->route('historias')->with('success', 'Historia enviada con éxito 💙 Será revisada por un moderador antes de publicarse.');
     }
+    public function moderar()
+        {
+            $historias = Historia::where('estado', 'pendiente')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return view('psychologist.histories-moderation', compact('historias'));
+        }
 }

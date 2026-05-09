@@ -11,7 +11,7 @@ class Chat extends Model
 
     protected $table = 'chat';
     protected $primaryKey = 'id_chat';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'fk_usuario',
@@ -80,6 +80,7 @@ class Chat extends Model
     // Obtener el último mensaje
     public function ultimoMensaje()
     {
-        return $this->hasOne(MensajeChat::class, 'fk_chat', 'id_chat')->latestOfMany('fecha_hora');
+        return $this->hasOne(MensajeChat::class, 'fk_chat', 'id_chat')
+            ->latestOfMany('created_at');
     }
 }

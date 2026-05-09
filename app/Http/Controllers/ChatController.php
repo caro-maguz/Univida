@@ -41,14 +41,14 @@ class ChatController extends Controller
                 'emisor' => 'sistema',
                 'tipo_remitente' => 'sistema',
                 'contenido' => 'Hola, gracias por escribirnos 😊 ¿Cómo te sientes hoy?',
-                'fecha_hora' => now(),
+                'created_at' => now(),
                 'leido' => false
             ]);
         }
 
         // Obtener mensajes
         $mensajes = MensajeChat::where('fk_chat', $chat->id_chat)
-            ->orderBy('fecha_hora', 'asc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         return view('chat', compact('chat', 'mensajes'));
@@ -86,7 +86,7 @@ class ChatController extends Controller
             'tipo_remitente' => 'usuario',
             'emisor' => 'usuario',
             'contenido' => $texto,
-            'fecha_hora' => now(),
+            'created_at' => now(),
             'leido' => false
         ]);
 
@@ -97,8 +97,8 @@ class ChatController extends Controller
                 'mensaje' => $mensaje->contenido,
                 'contenido' => $mensaje->contenido,
                 'tipo_remitente' => $mensaje->tipo_remitente,
-                'created_at' => $mensaje->fecha_hora
-                    ? $mensaje->fecha_hora->format('H:i')
+                'created_at' => $mensaje->created_at
+                    ? $mensaje->created_at->format('H:i')
                     : now()->format('H:i')
             ]
         ]);
@@ -114,7 +114,7 @@ class ChatController extends Controller
 
         $mensajes = MensajeChat::where('fk_chat', $chatId)
             ->where('id_mensaje', '>', $ultimoMensajeId)
-            ->orderBy('fecha_hora', 'asc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         return response()->json([
@@ -125,8 +125,8 @@ class ChatController extends Controller
                     'mensaje' => $msg->contenido,
                     'contenido' => $msg->contenido,
                     'tipo_remitente' => $msg->tipo_remitente,
-                    'created_at' => $msg->fecha_hora
-                        ? $msg->fecha_hora->format('H:i')
+                    'created_at' => $msg->created_at
+                        ? $msg->created_at->format('H:i')
                         : now()->format('H:i')
                 ];
             })
@@ -188,7 +188,7 @@ public function finalizarChat(Request $request)
             ->get()
             ->sortByDesc(function ($c) {
 
-                return optional(optional($c->ultimoMensaje)->fecha_hora)
+                return optional(optional($c->ultimoMensaje)->created_at)
                     ?? $c->fecha_inicio;
             })
             ->values();
@@ -220,7 +220,7 @@ public function finalizarChat(Request $request)
         $chat = Chat::with([
             'usuario',
             'mensajes' => function ($q) {
-                $q->orderBy('fecha_hora', 'asc');
+                $q->orderBy('created_at', 'asc');
             }
         ])->findOrFail($chatId);
 
@@ -252,7 +252,7 @@ public function finalizarChat(Request $request)
                 'tipo_remitente' => 'sistema',
                 'emisor' => 'sistema',
                 'contenido' => 'Un profesional se ha unido a la conversación.',
-                'fecha_hora' => now(),
+                'created_at' => now(),
                 'leido' => false
             ]);
 
@@ -298,7 +298,7 @@ public function finalizarChat(Request $request)
             'tipo_remitente' => 'psicologo',
             'emisor' => 'psicologo',
             'contenido' => $texto,
-            'fecha_hora' => now(),
+            'created_at' => now(),
             'leido' => false
         ]);
 
@@ -309,8 +309,8 @@ public function finalizarChat(Request $request)
                 'mensaje' => $mensaje->contenido,
                 'contenido' => $mensaje->contenido,
                 'tipo_remitente' => $mensaje->tipo_remitente,
-                'created_at' => $mensaje->fecha_hora
-                    ? $mensaje->fecha_hora->format('H:i')
+                'created_at' => $mensaje->created_at
+                    ? $mensaje->created_at->format('H:i')
                     : now()->format('H:i')
             ]
         ]);
@@ -346,7 +346,7 @@ public function finalizarChat(Request $request)
                     'tipo_remitente' => 'sistema',
                     'emisor' => 'sistema',
                     'contenido' => 'Un profesional se ha unido a la conversación.',
-                    'fecha_hora' => now(),
+                    'created_at' => now(),
                     'leido' => false
                 ]);
             }
@@ -366,7 +366,7 @@ public function finalizarChat(Request $request)
                 'tipo_remitente' => 'sistema',
                 'emisor' => 'sistema',
                 'contenido' => 'Un profesional ha iniciado la conversación.',
-                'fecha_hora' => now(),
+                'created_at' => now(),
                 'leido' => false
             ]);
         }

@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Psicologo;
-
+ use App\Models\Recurso; // asegúrate de importar el modelo
 
 // DROP en la tabla psicologo 
 
 class PsicologoController extends Controller
 {
+        
     
     public function dashboard()
          {
@@ -126,7 +127,17 @@ class PsicologoController extends Controller
 
         return redirect()->route('psicologos.index')->with('success', 'Psicólogo eliminado exitosamente.');
     }
+    
+    public function recursos()
+    {
+        return view('psychologist.resources'); // o la vista real que uses
+    }
 
+    public function estadisticos()
+    {
+        return view('psychologist.estadisticos'); // o dashboard stats
+    }
+        
 
 
 }
