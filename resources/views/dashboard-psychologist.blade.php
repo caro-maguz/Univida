@@ -263,9 +263,15 @@
 
       <!-- Gestión de Historias -->
       <div class="card">
-        <div class="card-icon" style="color: #f57c00;"><i class="fas fa-book-open"></i></div>
+        <div class="card-icon" style="color: #f57c00;">
+          <i class="fas fa-book-open"></i>
+        </div>
+
         <div class="card-label">Gestión de Historias</div>
-        <a href="{{ route('psychologist.resources') }}" class="card-link">Moderar historias</a>
+
+        <a href="{{ route('psychologist.historias.index') }}" class="card-link">
+          Moderar historias
+        </a>
       </div>
     </div>
   </main>

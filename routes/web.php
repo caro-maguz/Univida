@@ -104,6 +104,31 @@ Route::middleware(['auth.usuario'])->group(function () {
 | PSICÓLOGO
 |--------------------------------------------------------------------------
 */
+
+use App\Http\Controllers\PsicologoHistoriaController;
+
+Route::prefix('psychologist/historias')->name('psychologist.historias.')->group(function () {
+
+    Route::get('/', [PsicologoHistoriaController::class, 'index'])->name('index');
+
+    Route::get('/{id}', [PsicologoHistoriaController::class, 'show'])->name('show');
+
+    Route::post('/{id}/aprobar', [PsicologoHistoriaController::class, 'aprobar'])->name('aprobar');
+
+    Route::post('/{id}/rechazar', [PsicologoHistoriaController::class, 'rechazar'])->name('rechazar');
+
+    Route::get('/{id}/editar', [PsicologoHistoriaController::class, 'edit'])->name('edit');
+
+    Route::put('/{id}', [PsicologoHistoriaController::class, 'update'])->name('update');
+
+    Route::delete('/{id}', [PsicologoHistoriaController::class, 'destroy'])->name('destroy');
+
+});
+
+
+
+
+
 Route::middleware(['auth.psychologist'])->group(function () {
 
     Route::get('/recursos-profesionales', [PsicologoController::class, 'recursos'])
@@ -119,7 +144,6 @@ Route::middleware(['auth.psychologist'])->group(function () {
 });
 Route::get('/dashboard/psicologo', [PsicologoController::class, 'dashboard'])->name('dashboard.psychologist');
 Route::prefix('psychologist')->middleware('auth.psychologist')->group(function () {
-    Route::get('/recursos', [PsicologoController::class, 'recursos']);
     Route::get('/estadisticos', [PsicologoController::class, 'estadisticos']);
 });
 Route::middleware(['auth.psychologist'])->group(function () {

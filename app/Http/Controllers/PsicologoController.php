@@ -130,7 +130,11 @@ class PsicologoController extends Controller
     
     public function recursos()
     {
-        return view('psychologist.resources'); // o la vista real que uses
+        $recursos = Recurso::with('tipoRecurso')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('psychologist.resources', compact('recursos'));
     }
 
     public function estadisticos()

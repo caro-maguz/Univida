@@ -68,6 +68,6 @@ class HistoriaController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            return view('psychologist.histories-moderation', compact('historias'));
+            return view('psychologist.historias.index', compact('historias'));
         }
 }
