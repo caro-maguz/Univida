@@ -266,7 +266,7 @@
       <div class="card">
         <div class="card-icon" style="color: #f57c00;"><i class="fas fa-book-open"></i></div>
         <div class="card-label">Gestión de Historias</div>
-        <a href="<?php echo e(route('psychologist.historias.index')); ?>" class="card-link">Moderar historias</a>
+        <a href="<?php echo e(route('psychologist.resources')); ?>" class="card-link">Moderar historias</a>
       </div>
     </div>
   </main>

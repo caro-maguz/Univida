@@ -123,6 +123,16 @@ Route::middleware(['auth.psychologist'])->group(function () {
     Route::post('/chat-juridico/enviar', [ChatJuridicoController::class, 'enviar'])->name('chat.juridico.enviar');
 });
 
+Route::middleware(['auth.psychologist'])->group(function () {
+
+    // === Recursos profesionales ===
+    Route::get('/recursos-profesionales', [PsicologoController::class, 'recursos'])
+        ->name('psychologist.resources');
+    Route::get('psychologist/estadisticos', [PsicologoController::class, 'estadisticos'])
+        ->name('psychologist.estadisticos');
+
+});
+
 /*
 |--------------------------------------------------------------------------
 | ADMINISTRADOR
@@ -147,11 +157,6 @@ Route::prefix('administrador')->group(function () {
     Route::delete('/recursos/{id}', [RecursoController::class, 'destroy'])->name('administrador.recursos.destroy');
 });
 
-    //  CHAT JURÍDICO (CORREGIDO)
-    Route::get('/chat-juridico', [ChatJuridicoController::class, 'iniciar'])->name('chat.juridico');
-    Route::get('/chat-juridico/{id}', [ChatJuridicoController::class, 'ver'])->name('chat.juridico.ver');
-    Route::post('/chat-juridico/enviar', [ChatJuridicoController::class, 'enviar'])->name('chat.juridico.enviar');
-
     // CHAT DE APOYO
 Route::get('/chat', [ChatController::class, 'mostrarChat'])
     ->name('chat');
@@ -167,3 +172,13 @@ Route::get('/chat/nuevos-mensajes', [ChatController::class, 'obtenerNuevosMensaj
 // FINALIZAR CHAT
 Route::post('/chat/finalizar', [ChatController::class, 'finalizarChat'])
     ->name('chat.finalizar');
+
+
+Route::middleware(['auth.psychologist'])->group(function () {
+
+    Route::get('/chat-juridico', [ChatJuridicoController::class, 'iniciar'])->name('chat.juridico');
+    Route::get('/chat-juridico/{id}', [ChatJuridicoController::class, 'ver'])->name('chat.juridico.ver');
+    Route::post('/chat-juridico/enviar', [ChatJuridicoController::class, 'enviar'])->name('chat.juridico.enviar');
+
+});
+

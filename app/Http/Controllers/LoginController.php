@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -84,13 +85,17 @@ if (!$existe) {
             return redirect()->route('dashboard.user');
         }*/
 
-        if ($psicologo && Hash::check($contrasena, $psicologo->contrasena)) {
+        $psicologo = \App\Models\Psicologo::where('correo', $request->correo)->first();
+
+        if ($psicologo && Hash::check($request->contrasena, $psicologo->contrasena)) {
+
             session([
-                'rol' => 'psicologo', 
-                'id' => $psicologo->id_psicologo, 
+                'rol' => 'psicologo',
                 'psicologo_id' => $psicologo->id_psicologo,
+                'id' => $psicologo->id_psicologo,
                 'nombre' => $psicologo->nombre
             ]);
+
             return redirect()->route('dashboard.psychologist');
         }
 
